@@ -12,8 +12,8 @@ return {
     dependencies = { "MunifTanjim/nui.nvim" },
     config = function()
       require("fknotes").setup {
-        default_note_dir = vim.fn.expand "~/notes",
-        obsidian_path = nil, -- Set jika pakai Obsidian vault
+        default_note_dir = "/mnt/c/Users/XCODE/Documents/Obsidian/My Note", -- Set ke vault Obsidian yang sebenarnya
+        obsidian_path = "/mnt/c/Users/XCODE/Documents/Obsidian/My Note", -- Set jika pakai Obsidian vault
         default_task_priority = "medium",
         default_task_due_date = "today",
         ui = {
@@ -421,13 +421,79 @@ return {
     "windwp/nvim-ts-autotag",
     opts = {},
   },
-  -- Nvim UFO
+  -- Git Fugitive
+  {
+    "tpope/vim-fugitive",
+    cmd = {
+      "Git",
+      "G",
+      "Gdiffsplit",
+      "Gread",
+      "Gwrite",
+      "Ggrep",
+      "GMove",
+      "GDelete",
+      "GBrowse",
+    },
+    keys = {
+      { "<leader>gg", "<cmd>Git<CR>", desc = "Fugitive Git Status" },
+      { "<leader>gc", "<cmd>Git commit<CR>", desc = "Git Commit" },
+      { "<leader>gp", "<cmd>Git push<CR>", desc = "Git Push" },
+      { "<leader>gl", "<cmd>Git log<CR>", desc = "Git Log" },
+      { "<leader>gL", "<cmd>Git log --oneline<CR>", desc = "Git Log (oneline)" },
+      { "<leader>gb", "<cmd>Git branch<CR>", desc = "Git Branch" },
+      { "<leader>gd", "<cmd>Gdiffsplit<CR>", desc = "Git Diff" },
+      { "<leader>gr", "<cmd>Git rename<CR>", desc = "Git Rename" },
+      { "<leader>gR", "<cmd>Git reset HEAD<CR>", desc = "Git Reset HEAD" },
+      { "<leader>gs", "<cmd>Git stash<CR>", desc = "Git Stash" },
+    },
+  },
+  -- Enhanced folding with treesitter and LSP integration
   {
     "kevinhwang91/nvim-ufo",
     dependencies = {
       "kevinhwang91/promise-async",
     },
-    opts = {},
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      -- Enable better folding
+      vim.o.foldcolumn = '1'
+      vim.o.foldlevel = 99
+      vim.o.foldlevelstart = 99
+      vim.o.foldenable = true
+      vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+
+      require('ufo').setup({
+        open_fold_hl_timeout = 150,
+        close_fold_hl_timeout = 150,
+        provider_selector = function(bufnr, filetype, buftype)
+          return { 'treesitter', 'indent' }
+        end,
+        preview = {
+          win_config = {
+            border = { '┌', '─', '┐', '│', '┘', '─', '└', '│' },
+            winhighlight = 'Normal:Normal,FloatBorder:FloatBorder',
+            winblend = 0
+          },
+          mappings = {
+            close = 'q',
+            switch = 's',
+            trace = 'r'
+          }
+        }
+      })
+
+      -- Create commands for enabling/disabling ufo
+      vim.api.nvim_create_user_command('UfoEnable', function()
+        vim.o.foldenable = true
+        vim.notify('UFO folding enabled', vim.log.levels.INFO)
+      end, {})
+      
+      vim.api.nvim_create_user_command('UfoDisable', function()
+        vim.o.foldenable = false
+        vim.notify('UFO folding disabled', vim.log.levels.INFO)
+      end, {})
+    end,
   },
   -- Promise Async
   {
@@ -518,6 +584,35 @@ return {
     config = function(_, opts)
       require("tiny-inline-diagnostic").setup(opts)
     end,
+  },
+  -- Tiny Code Action
+  {
+    "rachartier/tiny-code-action.nvim",
+    event = "LspAttach",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    opts = {
+      -- Use default options or customize as needed
+    },
+    keys = {
+      {
+        "<leader>ca",
+        function()
+          require("tiny-code-action").code_action()
+        end,
+        mode = { "n", "v" },
+        desc = "Code Action (Tiny)",
+      },
+      {
+        "<leader>ca",
+        function()
+          require("tiny-code-action").range_code_action()
+        end,
+        mode = "v",
+        desc = "Range Code Action (Tiny)",
+      },
+    },
   },
 
   -- Plugin: store.nvim

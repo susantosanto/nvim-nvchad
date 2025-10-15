@@ -85,9 +85,22 @@ map("n", "<leader>gu", "<cmd>lua require('gitsigns').undo_stage_hunk()<CR>", { d
 -- Keymaps untuk colorizer
 map("n", "<leader>cc", "<cmd>ColorizerToggle<CR>", { desc = "Toggle Colorizer" })
 
--- Keymaps untuk nvim-ufo (folding)
-map("n", "zr", "<cmd>lua require('ufo').openFoldsExceptKinds()<CR>", { desc = "Open all folds" })
-map("n", "zm", "<cmd>lua require('ufo').closeFoldsWith()<CR>", { desc = "Close all folds" })
+-- Keymaps untuk nvim-ufo (folding) - fallback to native if ufo not loaded
+map("n", "zr", function()
+  if pcall(require, 'ufo') then
+    require('ufo').openFoldsExceptKinds()
+  else
+    vim.cmd("set foldlevel=99")
+  end
+end, { desc = "Open all folds" })
+
+map("n", "zm", function()
+  if pcall(require, 'ufo') then
+    require('ufo').closeFoldsWith()
+  else
+    vim.cmd("set foldlevel=0")
+  end
+end, { desc = "Close all folds" })
 
 -- Telescope File Browser keymap
 map("n", "<leader>te", function()
@@ -265,6 +278,22 @@ end, { desc = "Messages half page up" })
 map("n", "<S-C-d>", function()
   require("opencode").command "messages_half_page_down"
 end, { desc = "Messages half page down" })
+
+-- Git Fugitive keymaps
+map("n", "<leader>gf", "<cmd>Git<CR>", { desc = "Fugitive Git Status" })
+map("n", "<leader>gfc", "<cmd>Git commit<CR>", { desc = "Git Commit" })
+map("n", "<leader>gfp", "<cmd>Git push<CR>", { desc = "Git Push" })
+map("n", "<leader>gfl", "<cmd>Git log<CR>", { desc = "Git Log" })
+map("n", "<leader>gfL", "<cmd>Git log --oneline<CR>", { desc = "Git Log (oneline)" })
+map("n", "<leader>gfb", "<cmd>Git branch<CR>", { desc = "Git Branch" })
+map("n", "<leader>gfd", "<cmd>Gdiffsplit<CR>", { desc = "Git Diff" })
+map("n", "<leader>gfr", "<cmd>Git rename<CR>", { desc = "Git Rename" })
+map("n", "<leader>gfR", "<cmd>Git reset HEAD<CR>", { desc = "Git Reset HEAD" })
+map("n", "<leader>gfs", "<cmd>Git stash<CR>", { desc = "Git Stash" })
+map("n", "<leader>gfa", "<cmd>Git add --all<CR>", { desc = "Git Add All" })
+map("n", "<leader>gfu", "<cmd>Git checkout HEAD -- %<CR>", { desc = "Git Undo Changes to File" })
+map("n", "<leader>gfw", "<cmd>GBrowse<CR>", { desc = "Git Browse File/URL" })
+map("n", "<leader>gfi", "<cmd>Git init<CR>", { desc = "Git Init" })
 
 -- Buffer-sticks keymaps
 map("n", "<leader>bj", function()

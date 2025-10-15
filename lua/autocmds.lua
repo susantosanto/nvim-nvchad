@@ -47,3 +47,25 @@ vim.api.nvim_create_autocmd("VimEnter", {
   end,
   desc = "Check buffer safety on VimEnter",
 })
+
+-- Enhanced folding autocommands
+vim.api.nvim_create_augroup('FoldingSetup', { clear = true })
+
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+  group = 'FoldingSetup',
+  pattern = { "*" },
+  callback = function()
+    vim.o.foldlevel = 99
+    vim.o.foldenable = true
+  end,
+})
+
+-- Ensure folding is enabled for all file types
+vim.api.nvim_create_autocmd("FileType", {
+  group = 'FoldingSetup',
+  pattern = "*",
+  callback = function()
+    vim.o.foldlevel = 99
+    vim.o.foldenable = true
+  end,
+})

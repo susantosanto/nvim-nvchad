@@ -21,6 +21,9 @@ This configuration is tailored for full stack web development with JavaScript/Ty
 - **Telescope**: Fuzzy finder for files, buffers, and more
 - **NvimTree**: File explorer sidebar
 - **Git Signs**: Git diff markers in the gutter
+- **FkNotes**: Personal notes and task management with Obsidian integration
+- **Fugitive**: Advanced Git integration for Neovim
+- **Tiny Code Action**: Lightweight code actions menu
 - **Comment**: Easy code commenting with `gcc`
 - **AutoPairs**: Automatic closing of brackets and quotes
 - **Indent Blankline**: Visual indentation guides
@@ -58,6 +61,24 @@ This configuration is tailored for full stack web development with JavaScript/Ty
 - `<C-[>`: Clear Supermaven suggestion
 - `<C-n>`: Next Supermaven suggestion
 - `<C-p>`: Previous Supermaven suggestion
+- `<leader> + gf`: Git status (Fugitive)
+- `<leader> + gfc`: Git commit
+- `<leader> + gfp`: Git push
+- `<leader> + gfl`: Git log
+- `<leader> + gfL`: Git log (oneline)
+- `<leader> + gfb`: Git branch
+- `<leader> + gfd`: Git diff
+- `<leader> + gfr`: Git rename
+- `<leader> + gfR`: Git reset HEAD
+- `<leader> + gfs`: Git stash
+- `<leader> + gfa`: Git add all
+- `<leader> + gfu`: Git undo changes to file
+- `<leader> + gfw`: Git browse file
+- `<leader> + gfi`: Git init
+- `<leader> + fn`: Open FkNotes Menu
+- `<leader> + ft`: New Task
+- `<leader> + fl`: Browse Tasks
+- `<leader> + ca`: Code Action (Tiny)
 
 ### Code Formatting
 Automatic code formatting on save with:
