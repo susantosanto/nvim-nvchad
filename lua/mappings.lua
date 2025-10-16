@@ -146,14 +146,11 @@ map("n", "<leader>te", function()
   })
 end, { desc = "Open Telescope File Browser" })
 
--- Notifier.nvim keymaps
-map("n", "<leader>u", "", { desc = "Notifier" })
+-- Nvim-Notify keymaps
+map("n", "<leader>u", "", { desc = "Notify" })
 map("n", "<leader>uN", function()
-  require("notifier").dismiss_all()
+  require("notify").dismiss { silent = true, pending = true }
 end, { desc = "Delete all Notifications" })
-map("n", "<leader>uH", function()
-  require("notifier").show_history()
-end, { desc = "View Notification History" })
 
 -- Keymap untuk NvimTree
 map("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle NvimTree" })

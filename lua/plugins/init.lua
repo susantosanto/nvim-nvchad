@@ -501,12 +501,23 @@ return {
   {
     "kevinhwang91/promise-async",
   },
-  -- Snacks
+  -- Snacks (without notification override since using nvim-notify)
   {
     "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
-    opts = {},
+    opts = {
+      bigfile = { enabled = true },
+      hints = { enabled = true },
+      quickfile = { enabled = true },
+      statuscolumn = { enabled = true },
+      words = { enabled = true },
+      dashboard = { enabled = false }, -- Disable if using alpha dashboard
+      indent = { enabled = true },
+      progress = { enabled = true },
+      scope = { enabled = true },
+      statusline = { enabled = true },
+    },
   },
   -- Tailwind Tools
   {
@@ -521,13 +532,13 @@ return {
     "nvim-telescope/telescope-file-browser.nvim",
     dependencies = { "nvim-telescope/telescope.nvim" },
   },
-  -- Noice (depends on new notifier)
+  -- Noice
   {
     "folke/noice.nvim",
     event = "VeryLazy",
     dependencies = {
       "MunifTanjim/nui.nvim",
-      "y3owk1n/notifier.nvim",
+      "rcarriga/nvim-notify",
     },
     opts = {
       lsp = {
@@ -548,9 +559,27 @@ return {
   },
   -- Modern notification system
   {
-    "y3owk1n/notifier.nvim",
-    config = function()
-      require("configs.notifier").setup()
+    "rcarriga/nvim-notify",
+    opts = {
+      background_colour = "#000000",
+      timeout = 3000,
+      max_width = 80,
+      max_height = 20,
+      stages = "fade_in_slide_out",
+      top_padding = 2,
+      icons = {
+        ERROR = "",
+        WARN = "",
+        INFO = "",
+        DEBUG = "",
+        TRACE = "✎",
+      },
+      render = "default",
+      position = "top_right",
+    },
+    init = function()
+      -- Override default vim.notify with nvim-notify
+      vim.notify = require("notify")
     end,
   },
   -- Dotenv
@@ -586,7 +615,7 @@ return {
     "rachartier/tiny-inline-diagnostic.nvim",
     event = "LspAttach",
     dependencies = {
-      "y3owk1n/notifier.nvim",
+      "rcarriga/nvim-notify",
     },
     opts = {},
     config = function(_, opts)
