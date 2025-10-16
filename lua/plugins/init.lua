@@ -521,13 +521,13 @@ return {
     "nvim-telescope/telescope-file-browser.nvim",
     dependencies = { "nvim-telescope/telescope.nvim" },
   },
-  -- Noice
+  -- Noice (depends on new notifier)
   {
     "folke/noice.nvim",
     event = "VeryLazy",
     dependencies = {
       "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
+      "y3owk1n/notifier.nvim",
     },
     opts = {
       lsp = {
@@ -546,12 +546,12 @@ return {
       },
     },
   },
-  -- Notify
+  -- Modern notification system
   {
-    "rcarriga/nvim-notify",
-    opts = {
-      background_colour = "#000000",
-    },
+    "y3owk1n/notifier.nvim",
+    config = function()
+      require("configs.notifier").setup()
+    end,
   },
   -- Dotenv
   {
@@ -586,7 +586,7 @@ return {
     "rachartier/tiny-inline-diagnostic.nvim",
     event = "LspAttach",
     dependencies = {
-      "rcarriga/nvim-notify",
+      "y3owk1n/notifier.nvim",
     },
     opts = {},
     config = function(_, opts)

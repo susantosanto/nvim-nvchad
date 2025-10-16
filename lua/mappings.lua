@@ -147,11 +147,14 @@ map("n", "<leader>te", function()
   }
 end, { desc = "Open Telescope File Browser" })
 
--- Nvim-Notify keymaps
-map("n", "<leader>u", "", { desc = "Notify" })
+-- Notifier.nvim keymaps
+map("n", "<leader>u", "", { desc = "Notifier" })
 map("n", "<leader>uN", function()
-  require("notify").dismiss { silent = true, pending = true }
+  require("notifier").dismiss_all()
 end, { desc = "Delete all Notifications" })
+map("n", "<leader>uH", function()
+  require("notifier").show_history()
+end, { desc = "View Notification History" })
 
 -- Keymap untuk NvimTree
 map("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle NvimTree" })
@@ -261,6 +264,12 @@ map("n", "<RightMouse>", function()
   local options = vim.bo.ft == "NvimTree" and "nvimtree" or "default"
   require("menu").open(options, { mouse = true })
 end, { desc = "Open context menu" })
+
+-- Keyboard shortcut to open context menu
+map("n", "<leader>cm", function()
+  local options = vim.bo.ft == "NvimTree" and "nvimtree" or "default"
+  require("menu").open(options, { mouse = false })
+end, { desc = "Open context menu with keyboard" })
 
 -- Close buffer
 map("n", "<leader>x", function()
