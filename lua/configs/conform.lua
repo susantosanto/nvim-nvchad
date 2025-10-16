@@ -29,11 +29,9 @@ local options = {
     },
   },
 
-  format_on_save = {
-    -- These options will be passed to conform.format()
-    timeout_ms = 1000,  -- Increased timeout for better reliability
-    lsp_fallback = true,
-  },
+  -- Disable automatic format on save to avoid conflicts with autosave
+  -- Instead, we'll use a custom autocommand that only formats on explicit saves
+  format_on_save = false,
 }
 
 return options

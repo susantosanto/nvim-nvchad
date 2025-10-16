@@ -3,10 +3,10 @@ local map = vim.keymap.set
 -- Floaterm keymaps
 map("n", "<C-p>", ":FloatermToggle<CR>", { desc = "Toggle Floaterm" })
 map({ "n", "t" }, "<C-j>", function()
-  require("floaterm.api").cycle_term_bufs "prev"
+  require("floaterm.api").cycle_term_bufs("prev")
 end, { desc = "Cycle to previous Floaterm" })
 map({ "n", "t" }, "<C-k>", function()
-  require("floaterm.api").cycle_term_bufs "next"
+  require("floaterm.api").cycle_term_bufs("next")
 end, { desc = "Cycle to next Floaterm" })
 
 local opts = { silent = true, desc = "Luxmotion: " }
@@ -35,7 +35,6 @@ map(
   { desc = "Open mini.files (working dir)" }
 )
 
-
 -- mini.trailspace: Hapus trailing whitespace
 map("n", prefix .. "tw", "<cmd>lua require('mini.trailspace').trim()<CR>", { desc = "Trim trailing whitespace" })
 map(
@@ -59,10 +58,10 @@ map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>", { desc = "Exit insert mode" })
 map("i", "jj", "<ESC>", { desc = "Exit insert mode" })
 map("n", "<S-q>", function()
-  local bufs = vim.fn.getbufinfo { buflisted = true }
+  local bufs = vim.fn.getbufinfo({ buflisted = true })
   vim.api.nvim_buf_delete(0, { force = false })
   if #bufs <= 1 then
-    vim.cmd "enew"
+    vim.cmd("enew")
   end
 end, { desc = "Close buffer" })
 
@@ -89,16 +88,16 @@ map("n", "<leader>cc", "<cmd>ColorizerToggle<CR>", { desc = "Toggle Colorizer" }
 
 -- Keymaps untuk nvim-ufo (folding) - fallback to native if ufo not loaded
 map("n", "zr", function()
-  if pcall(require, 'ufo') then
-    require('ufo').openFoldsExceptKinds()
+  if pcall(require, "ufo") then
+    require("ufo").openFoldsExceptKinds()
   else
     vim.cmd("set foldlevel=99")
   end
 end, { desc = "Open all folds" })
 
 map("n", "zm", function()
-  if pcall(require, 'ufo') then
-    require('ufo').closeFoldsWith()
+  if pcall(require, "ufo") then
+    require("ufo").closeFoldsWith()
   else
     vim.cmd("set foldlevel=0")
   end
@@ -106,11 +105,11 @@ end, { desc = "Close all folds" })
 
 -- Telescope File Browser keymap
 map("n", "<leader>te", function()
-  require("telescope").extensions.file_browser.file_browser {
+  require("telescope").extensions.file_browser.file_browser({
     path = "%:p:h",
     select_buffer = true,
     attach_mappings = function(prompt_bufnr, map)
-      map('i', '<C-s>', function()
+      map("i", "<C-s>", function()
         local current_picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
         local selection = current_picker:get_selection()
         if selection then
@@ -118,7 +117,7 @@ map("n", "<leader>te", function()
           vim.cmd("split " .. selection.path)
         end
       end)
-      map('i', '<C-v>', function()
+      map("i", "<C-v>", function()
         local current_picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
         local selection = current_picker:get_selection()
         if selection then
@@ -126,7 +125,7 @@ map("n", "<leader>te", function()
           vim.cmd("vsplit " .. selection.path)
         end
       end)
-      map('n', 's', function()
+      map("n", "s", function()
         local current_picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
         local selection = current_picker:get_selection()
         if selection then
@@ -134,7 +133,7 @@ map("n", "<leader>te", function()
           vim.cmd("split " .. selection.path)
         end
       end)
-      map('n', 'v', function()
+      map("n", "v", function()
         local current_picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
         local selection = current_picker:get_selection()
         if selection then
@@ -144,7 +143,7 @@ map("n", "<leader>te", function()
       end)
       return true
     end,
-  }
+  })
 end, { desc = "Open Telescope File Browser" })
 
 -- Notifier.nvim keymaps
@@ -186,10 +185,18 @@ map("v", "<leader>y", '"+y', { desc = "Copy to system clipboard" })
 map("v", "p", '"_dP', { desc = "Paste without overwriting yank" })
 map("v", "<", "<gv", { desc = "Indent left" })
 map("v", ">", ">gv", { desc = "Indent right" })
-map("v", "<C-A-j>", ":m '>+1<CR>gv=gv", { desc = "Move lines down" })
-map("v", "<C-A-k>", ":m '<-2<CR>gv=gv", { desc = "Move lines up" })
-map("v", "<C-A-S-j>", ":'<,'>t'><CR>gv=gv", { desc = "Duplicate block down" })
-map("v", "<C-A-S-k>", ":'<,'>t-1<CR>gv=gv", { desc = "Duplicate block up" })
+map("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move lines down" })
+map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move lines up" })
+map("v", "<A-S-j>", ":'<,'>t'><CR>gv=gv", { desc = "Duplicate block down" })
+map("v", "<A-S-k>", ":'<,'>t-1<CR>gv=gv", { desc = "Duplicate block up" })
+
+-- Move line in Normal mode
+map("n", "<A-j>", ":m+1<CR>==", { desc = "Move line down" })
+map("n", "<A-k>", ":m-2<CR>==", { desc = "Move line up" })
+
+-- Duplicate line in Normal mode
+map("n", "<A-S-j>", "Yp", { desc = "Duplicate line down" })
+map("n", "<A-S-k>", "Y^-1p", { desc = "Duplicate line up" })
 
 -- Mode Insert
 map("i", "<C-l>", "<Esc>la", { desc = "Keluar dari kurung dan masuk insert" })
@@ -198,10 +205,10 @@ map("i", "jj", "<Esc>", { desc = "Exit insert mode" })
 map("i", "<C-Space>", function()
   require("cmp").complete()
 end, { desc = "Trigger completion" })
-map("i", "<C-A-j>", "<Esc>:m .+1<CR>==gi", { desc = "Move line down" })
-map("i", "<C-A-k>", "<Esc>:m .-2<CR>==gi", { desc = "Move line up" })
-map("i", "<C-A-S-j>", "<Esc>:t.<CR>gi", { desc = "Duplicate line down" })
-map("i", "<C-A-S-k>", "<Esc>:t.-1<CR>gi", { desc = "Duplicate line up" })
+map("i", "<A-j>", "<Esc>:m .+1<CR>==gi", { desc = "Move line down" })
+map("i", "<A-k>", "<Esc>:m .-2<CR>==gi", { desc = "Move line up" })
+map("i", "<A-S-j>", "<Esc>:t.<CR>gi", { desc = "Duplicate line down" })
+map("i", "<A-S-k>", "<Esc>:t.-1<CR>gi", { desc = "Duplicate line up" })
 
 -- Comment keymaps
 map("n", "<leader>/", "<cmd>lua require('Comment.api').toggle.linewise.current()<CR>", { desc = "Toggle comment" })
@@ -227,7 +234,7 @@ map(
 -- Save with Ctrl+S
 local function save_file()
   if vim.bo.modifiable and vim.bo.modified then
-    vim.cmd "update"
+    vim.cmd("update")
   end
 end
 map({ "n", "i", "v" }, "<C-s>", save_file, { desc = "Save file (if modified)" })
@@ -238,7 +245,7 @@ map("n", "<leader>th", "<cmd>Telescope themes<CR>", { desc = "Switch NvChad them
 -- Auto format
 map("n", "<leader>fm", function()
   if package.loaded["conform"] then
-    require("conform").format { async = true, lsp_fallback = true }
+    require("conform").format({ async = true, lsp_fallback = true })
   else
     vim.lsp.buf.format()
   end
@@ -260,7 +267,7 @@ map("n", "zD", ":UfoDisable<CR>", { desc = "Disable UFO folding" })
 
 -- Mouse + NvimTree menu
 map("n", "<RightMouse>", function()
-  vim.cmd.exec '"normal! \\<RightMouse>"'
+  vim.cmd.exec('"normal! \\<RightMouse>"')
   local options = vim.bo.ft == "NvimTree" and "nvimtree" or "default"
   require("menu").open(options, { mouse = true })
 end, { desc = "Open context menu" })
@@ -273,10 +280,10 @@ end, { desc = "Open context menu with keyboard" })
 
 -- Close buffer
 map("n", "<leader>x", function()
-  local bufs = vim.fn.getbufinfo { buflisted = true }
+  local bufs = vim.fn.getbufinfo({ buflisted = true })
   vim.api.nvim_buf_delete(0, { force = false })
   if #bufs <= 1 then
-    vim.cmd "enew"
+    vim.cmd("enew")
   end
 end, { desc = "Close buffer" })
 
@@ -301,7 +308,7 @@ map("n", "<leader>oa", function()
   require("opencode").ask("@this: ", { submit = true })
 end, { desc = "Ask about this" })
 map({ "n", "v" }, "<leader>o+", function()
-  require("opencode").prompt "@this"
+  require("opencode").prompt("@this")
 end, { desc = "Add this" })
 map("n", "<leader>os", function()
   require("opencode").select()
@@ -313,19 +320,19 @@ map("n", "<leader>oc", function()
   require("opencode").command()
 end, { desc = "Select command" })
 map("n", "<leader>on", function()
-  require("opencode").command "session_new"
+  require("opencode").command("session_new")
 end, { desc = "New session" })
 map("n", "<leader>oi", function()
-  require("opencode").command "session_interrupt"
+  require("opencode").command("session_interrupt")
 end, { desc = "Interrupt session" })
 map("n", "<leader>oA", function()
-  require("opencode").command "agent_cycle"
+  require("opencode").command("agent_cycle")
 end, { desc = "Cycle selected agent" })
 map("n", "<S-C-u>", function()
-  require("opencode").command "messages_half_page_up"
+  require("opencode").command("messages_half_page_up")
 end, { desc = "Messages half page up" })
 map("n", "<S-C-d>", function()
-  require("opencode").command "messages_half_page_down"
+  require("opencode").command("messages_half_page_down")
 end, { desc = "Messages half page down" })
 
 -- No highlight (remove search highlight)
@@ -355,13 +362,23 @@ map("n", "<leader>bq", function()
   require("buffer-sticks").close()
 end, { desc = "Close buffer" })
 map("n", "<leader>bp", function()
-  require("buffer-sticks").list {
+  require("buffer-sticks").list({
     action = function(buffer, leave)
       print("Selected: " .. buffer.name)
       leave()
     end,
-  }
+  })
 end, { desc = "Buffer picker" })
 map("n", "<leader>bt", function()
   require("buffer-sticks").toggle()
 end, { desc = "Toggle buffer sticks" })
+
+-- Typr plugin keymaps
+map("n", "<leader>tt", "<cmd>Typr<CR>", { desc = "Open Typr typing practice" })
+map("n", "<leader>ts", "<cmd>TyprStats<CR>", { desc = "Open Typr statistics" })
+
+-- Auto save plugin keymaps
+map("n", "<leader>as", "<cmd>Autosave toggle<CR>", { desc = "Toggle autosave" })
+map("n", "<leader>ae", "<cmd>Autosave on<CR>", { desc = "Enable autosave" })
+map("n", "<leader>ad", "<cmd>Autosave off<CR>", { desc = "Disable autosave" })
+map("n", "<leader>at", "<cmd>Autosave status<CR>", { desc = "Check autosave status" })

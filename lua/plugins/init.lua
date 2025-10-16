@@ -367,7 +367,7 @@ return {
     "stevearc/conform.nvim",
     event = "VeryLazy",
     config = function()
-      require "configs.conform"
+      require("configs.conform_custom").setup()
     end,
   },
   -- Dressing
@@ -644,9 +644,26 @@ return {
     "y3owk1n/tailwind-autosort.nvim",
     event = "VeryLazy",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
-    opts = {
-      enable_autocmd = true,
-      notify_line_changed = true,
-    },
+    config = function()
+      require("configs.tailwind-autosort").setup()
+    end,
+  },
+  -- Typing practice plugin
+  {
+    "nvzone/typr",
+    dependencies = "nvzone/volt",
+    opts = {},
+    cmd = { "Typr", "TyprStats" },
+  },
+  -- Auto save plugin
+  {
+    "brianhuster/autosave.nvim",
+    event = "VeryLazy",
+    config = function()
+      vim.g.autosave_enabled = true
+      vim.g.autosave_disable_inside_paths = { vim.fn.stdpath('config') }
+      -- Disable autowriteall to avoid conflicts with other plugins
+      vim.o.autowriteall = false
+    end,
   },
 }
