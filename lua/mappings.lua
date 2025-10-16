@@ -34,6 +34,8 @@ map(
   "<cmd>lua require('mini.files').open(vim.loop.cwd(), true)<CR>",
   { desc = "Open mini.files (working dir)" }
 )
+
+
 -- mini.trailspace: Hapus trailing whitespace
 map("n", prefix .. "tw", "<cmd>lua require('mini.trailspace').trim()<CR>", { desc = "Trim trailing whitespace" })
 map(
@@ -107,6 +109,41 @@ map("n", "<leader>te", function()
   require("telescope").extensions.file_browser.file_browser {
     path = "%:p:h",
     select_buffer = true,
+    attach_mappings = function(prompt_bufnr, map)
+      map('i', '<C-s>', function()
+        local current_picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
+        local selection = current_picker:get_selection()
+        if selection then
+          require("telescope.actions").close(prompt_bufnr)
+          vim.cmd("split " .. selection.path)
+        end
+      end)
+      map('i', '<C-v>', function()
+        local current_picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
+        local selection = current_picker:get_selection()
+        if selection then
+          require("telescope.actions").close(prompt_bufnr)
+          vim.cmd("vsplit " .. selection.path)
+        end
+      end)
+      map('n', 's', function()
+        local current_picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
+        local selection = current_picker:get_selection()
+        if selection then
+          require("telescope.actions").close(prompt_bufnr)
+          vim.cmd("split " .. selection.path)
+        end
+      end)
+      map('n', 'v', function()
+        local current_picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
+        local selection = current_picker:get_selection()
+        if selection then
+          require("telescope.actions").close(prompt_bufnr)
+          vim.cmd("vsplit " .. selection.path)
+        end
+      end)
+      return true
+    end,
   }
 end, { desc = "Open Telescope File Browser" })
 
@@ -234,6 +271,9 @@ map("n", "<leader>x", function()
   end
 end, { desc = "Close buffer" })
 
+-- Plugin Manager (Lazy) keymap
+map("n", "<leader>lp", "<cmd>Lazy<CR>", { desc = "Lazy Plugin Manager" })
+
 -- Additional Telescope keybindings
 map("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", { desc = "Search text in files" })
 map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "List open buffers" })
@@ -278,6 +318,9 @@ end, { desc = "Messages half page up" })
 map("n", "<S-C-d>", function()
   require("opencode").command "messages_half_page_down"
 end, { desc = "Messages half page down" })
+
+-- No highlight (remove search highlight)
+map("n", "<leader>nh", ":nohlsearch<CR>", { desc = "Clear search highlight" })
 
 -- Git Fugitive keymaps
 map("n", "<leader>gf", "<cmd>Git<CR>", { desc = "Fugitive Git Status" })

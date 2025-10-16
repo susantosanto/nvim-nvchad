@@ -409,6 +409,7 @@ return {
       require("mini.pairs").setup()
       require("mini.surround").setup()
       require("mini.trailspace").setup()
+      require("mini.files").setup()
     end,
   },
   -- Treesitter Context
@@ -495,6 +496,7 @@ return {
       end, {})
     end,
   },
+
   -- Promise Async
   {
     "kevinhwang91/promise-async",
@@ -550,6 +552,12 @@ return {
     opts = {
       background_colour = "#000000",
     },
+  },
+  -- Dotenv
+  {
+    "ellisonleao/dotenv.nvim",
+    priority = 1000,
+    config = true,
   },
   -- Trouble
   {
@@ -622,5 +630,23 @@ return {
     cmd = { "Store" },
     dependencies = { "OXY2DEV/markview.nvim" },
     opts = {},
+  },
+  -- Visual feedback for undo, redo, yank, paste, search operations
+  {
+    "y3owk1n/undo-glow.nvim",
+    event = "VeryLazy", -- Load on startup
+    config = function()
+      require("configs.undo-glow").setup()
+    end,
+  },
+  -- Automatic sorting of Tailwind CSS classes
+  {
+    "y3owk1n/tailwind-autosort.nvim",
+    event = "VeryLazy",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = {
+      enable_autocmd = true,
+      notify_line_changed = true,
+    },
   },
 }
