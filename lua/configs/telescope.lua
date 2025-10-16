@@ -100,5 +100,10 @@ telescope.setup {
         },
       },
     },
+    media_files = {
+      filetypes = {"png", "jpg", "jpeg", "gif", "mp4", "webm", "pdf", "epub"},
+      -- find command (using fdfind which is fd on some systems like Ubuntu)
+      find_cmd = "fdfind",
+    },
   },
 }

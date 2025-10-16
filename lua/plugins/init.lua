@@ -695,4 +695,63 @@ return {
       vim.o.autowriteall = false
     end,
   },
+  -- Neodim: Dim unused variables and functions
+  {
+    "zbirenbaum/neodim",
+    event = "LspAttach",
+    opts = {
+      alpha = 0.4, -- Level of dimming (0-1), more visible
+      blend_color = "#000000", -- Color used for dimming
+      hide = {
+        virtual_text = true, -- Hide virtual text to avoid conflict with tiny-inline-diagnostic
+        signs = false, -- Keep signs visible
+        underline = false, -- Show underline for better visibility
+      },
+      priority = 1000, -- High priority to ensure it runs
+    },
+    config = function(_, opts)
+      require("neodim").setup(opts)
+    end,
+  },
+  -- Twilight: Reduce visual clutter in surrounding context
+  {
+    "folke/twilight.nvim",
+    config = function()
+      require("twilight").setup({
+        dimming = {
+          alpha = 0.25, -- Amount of dimming
+          color = { "Normal", "#ffffff" }, -- CSS color / highlight group / list of colors
+          term_bg = "#000000", -- Blends the terminal background
+          inactive = false, -- When true, other windows are not dimmed
+        },
+        expansion = {
+          larger = false, -- Expand more than one level for the specified filetype
+        },
+        target = { -- Treesitter nodes or regex highlights
+          "comment",
+          "function",
+          "method",
+          "class",
+          "conditional",
+          "loop",
+          "try",
+          "except",
+          "arguments",
+          "attribute",
+        },
+        exclude = {}, -- Exclude these filetypes
+      })
+    end,
+  },
+  -- Telescope Media Files: Preview media files in telescope
+  {
+    "nvim-telescope/telescope-media-files.nvim",
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+      "nvim-lua/plenary.nvim",
+    },
+    config = function()
+      require("telescope").load_extension("media_files")
+    end,
+  },
 }

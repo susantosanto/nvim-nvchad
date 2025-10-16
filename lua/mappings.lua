@@ -374,6 +374,16 @@ end, { desc = "Toggle buffer sticks" })
 map("n", "<leader>tt", "<cmd>Typr<CR>", { desc = "Open Typr typing practice" })
 map("n", "<leader>ts", "<cmd>TyprStats<CR>", { desc = "Open Typr statistics" })
 
+-- Twilight plugin keymaps
+map("n", "<leader>tw", function()
+  require("twilight").toggle()
+end, { desc = "Toggle Twilight mode" })
+
+-- Telescope Media Files keymaps
+map("n", "<leader>fi", function()
+  require("telescope").extensions.media_files.media_files()
+end, { desc = "Find Media Files" })
+
 -- Auto save plugin keymaps
 map("n", "<leader>as", "<cmd>Autosave toggle<CR>", { desc = "Toggle autosave" })
 map("n", "<leader>ae", "<cmd>Autosave on<CR>", { desc = "Enable autosave" })
