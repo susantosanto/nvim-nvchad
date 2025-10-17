@@ -351,7 +351,92 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     event = "VeryLazy",
-    config = true,
+    config = function()
+      require("gitsigns").setup {
+        signs = {
+          add          = { text = "│" },
+          change       = { text = "│" },
+          delete       = { text = "_" },
+          topdelete    = { text = "‾" },
+          changedelete = { text = "~" },
+          untracked    = { text = "┆" },
+        },
+        signs_staged = {
+          add          = { text = "+" },
+          change       = { text = "~" },
+          delete       = { text = "_" },
+          topdelete    = { text = "‾" },
+          changedelete = { text = "~" },
+          untracked    = { text = "┆" },
+        },
+        signs_staged_enable = true,
+        signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
+        numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
+        linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
+        word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
+        watch_gitdir = {
+          interval = 1000,
+          follow_files = true
+        },
+        attach_to_untracked = true,
+        current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+        current_line_blame_opts = {
+          virt_text = true,
+          virt_text_pos = "eol", -- 'eol' | 'overlay' | 'right_align'
+          delay = 1000,
+          ignore_whitespace = false,
+        },
+        sign_priority = 6,
+        update_debounce = 100,
+        status_formatter = nil, -- Use default
+        max_file_length = 40000,
+        preview_config = {
+          -- Options passed to nvim_open_win
+          border = "single",
+          style = "minimal",
+          relative = "cursor",
+          row = 0,
+          col = 1
+        },
+        on_attach = function(bufnr)
+          local gitsigns = require('gitsigns')
+
+          local function map(mode, l, r, opts)
+            opts = vim.tbl_extend('force', opts or {}, { buffer = bufnr })
+            vim.keymap.set(mode, l, r, opts)
+          end
+
+          -- Navigation
+          map('n', ']c', function()
+            if vim.wo.diff then return ']c' end
+            vim.schedule(function() gitsigns.next_hunk() end)
+            return '<Ignore>'
+          end, { expr = true, desc = "Next git hunk" })
+
+          map('n', '[c', function()
+            if vim.wo.diff then return '[c' end
+            vim.schedule(function() gitsigns.prev_hunk() end)
+            return '<Ignore>'
+          end, { expr = true, desc = "Previous git hunk" })
+
+          -- Actions
+          map({'n', 'v'}, '<leader>gs', ':Gitsigns stage_hunk<CR>', { desc = "Stage hunk" })
+          map({'n', 'v'}, '<leader>gr', ':Gitsigns reset_hunk<CR>', { desc = "Reset hunk" })
+          map('n', '<leader>gS', gitsigns.stage_buffer, { desc = "Stage buffer" })
+          map('n', '<leader>gu', gitsigns.undo_stage_hunk, { desc = "Undo stage hunk" })
+          map('n', '<leader>gR', gitsigns.reset_buffer, { desc = "Reset buffer" })
+          map('n', '<leader>gp', gitsigns.preview_hunk, { desc = "Preview hunk" })
+          map('n', '<leader>gb', function() gitsigns.blame_line{full=true} end, { desc = "Blame line" })
+          map('n', '<leader>gB', gitsigns.toggle_current_line_blame, { desc = "Toggle line blame" })
+          map('n', '<leader>gd', gitsigns.diffthis, { desc = "Diff this" })
+          map('n', '<leader>gD', function() gitsigns.diffthis('~') end, { desc = "Diff this against HEAD~" })
+          map('n', '<leader>gt', gitsigns.toggle_deleted, { desc = "Toggle deleted" })
+
+          -- Text object
+          map({'o', 'x'}, 'ig', ':<C-U>Gitsigns select_hunk<CR>', { desc = "Select git hunk" })
+        end
+      }
+    end,
   },
   -- WhichKey
   {
@@ -617,9 +702,8 @@ return {
     dependencies = {
       "rcarriga/nvim-notify",
     },
-    opts = {},
-    config = function(_, opts)
-      require("tiny-inline-diagnostic").setup(opts)
+    config = function()
+      require("configs.tiny_inline_diagnostic").setup()
     end,
   },
   -- Tiny Code Action
@@ -693,6 +777,30 @@ return {
       vim.g.autosave_disable_inside_paths = { vim.fn.stdpath('config') }
       -- Disable autowriteall to avoid conflicts with other plugins
       vim.o.autowriteall = false
+    end,
+  },
+  
+  -- Prisma support
+  {
+    "dastanaron/prisma.nvim",
+    ft = "prisma",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function()
+      require("prisma").setup({
+        -- Optional settings with their defaults
+        -- log_level = "info", -- Options: "error", "warn", "info", "debug"
+        -- lsp = {
+        --   on_attach = function(client, bufnr) 
+        --     -- Your on_attach function if needed
+        --   end,
+        --   flags = { debounce_text_changes = 150 },
+        -- },
+        -- show_line_numbers_on_hover_hint = false,
+        -- show_variable_references_on_hover = false,
+      })
     end,
   },
   -- Neodim: Dim unused variables and functions

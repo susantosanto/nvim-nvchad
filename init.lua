@@ -45,15 +45,15 @@ vim.api.nvim_buf_line_count = function(bufnr)
   end
 end
 
--- Use NvChad's default diagnostic configuration with modern, minimal icons
+-- Configure diagnostic with professional icons for signs only (let tiny-inline-diagnostic handle virtual text)
 vim.diagnostic.config({
-  virtual_text = false, -- Disable default virtual text
+  virtual_text = false, -- Disable default virtual text, let tiny-inline-diagnostic handle it
   signs = {
     text = {
-      [vim.diagnostic.severity.ERROR] = "",
-      [vim.diagnostic.severity.WARN] = "",
-      [vim.diagnostic.severity.HINT] = "",
-      [vim.diagnostic.severity.INFO] = ""
+      [vim.diagnostic.severity.ERROR] = " ",
+      [vim.diagnostic.severity.WARN] = " ",
+      [vim.diagnostic.severity.HINT] = "󰌶 ",
+      [vim.diagnostic.severity.INFO] = " "
     },
     numhl = false, -- Don't highlight the line number, just the sign column
   },
@@ -107,6 +107,32 @@ dofile(vim.g.base46_cache .. "statusline")
 
 require "options"
 require "autocmds"
+
+-- Apply diagnostic configuration again after all plugins are loaded
+-- This ensures it overrides any default configuration from NvChad or other plugins
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    vim.schedule(function()
+      -- Reapply our diagnostic configuration to ensure it takes effect
+      vim.diagnostic.config({
+        virtual_text = false, -- Disable default virtual text, let tiny-inline-diagnostic handle it
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = " ",
+            [vim.diagnostic.severity.WARN] = " ",
+            [vim.diagnostic.severity.HINT] = "󰌶 ",
+            [vim.diagnostic.severity.INFO] = " "
+          },
+          numhl = false, -- Don't highlight the line number, just the sign column
+        },
+        update_in_insert = false,
+        underline = true,
+        severity_sort = true,
+      })
+    end)
+  end,
+  desc = "Reapply diagnostic configuration after startup"
+})
 
 vim.schedule(function()
   require "mappings"
