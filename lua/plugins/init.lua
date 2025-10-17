@@ -96,12 +96,12 @@ return {
       smear_between_buffers = false,
       smear_between_neighbor_lines = true,
       smear_insert_mode = true,
-      stiffness = 0.5,
-      trailing_stiffness = 0.6,
-      damping = 0.7,
-      trailing_exponent = 2.0,
-      distance_stop_animating = 0.02,
-      time_interval = 10,
+      stiffness = 0.1,            -- Very flexible (very low stiffness)
+      trailing_stiffness = 0.15,  -- Low for maximum trailing effect
+      damping = 0.3,              -- Low damping for more trailing
+      trailing_exponent = 1.0,    -- Lower for smoother, more trailing effect
+      distance_stop_animating = 0.005, -- Animate for even longer distance
+      time_interval = 5,          -- Faster animation for smoother effect
       legacy_computing_symbols_support = false,
     },
   },

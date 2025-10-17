@@ -389,3 +389,8 @@ map("n", "<leader>as", "<cmd>Autosave toggle<CR>", { desc = "Toggle autosave" })
 map("n", "<leader>ae", "<cmd>Autosave on<CR>", { desc = "Enable autosave" })
 map("n", "<leader>ad", "<cmd>Autosave off<CR>", { desc = "Disable autosave" })
 map("n", "<leader>at", "<cmd>Autosave status<CR>", { desc = "Check autosave status" })
+
+-- Search and Replace
+map("n", "<leader>sr", ":%s/", { desc = "Search and replace in file" })
+map("n", "<leader>sra", ":%s//g<Left><Left>", { desc = "Search and replace all in file" })
+map("n", "<leader>src", ":%s//gc<Left><Left>", { desc = "Search and replace all in file with confirm" })
