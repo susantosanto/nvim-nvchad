@@ -17,9 +17,11 @@ M.base46 = {
 M.nvdash = { load_on_startup = false }
 M.ui = {
   tabufline = {
+    enabled = false,
     lazyload = false,
   },
   statusline = {
+    theme = "vscode_colored",
     -- Choose separator style: "default", "arrow", "round", "slant", or "block"
     separator_style = "arrow", -- Using arrow separators for modern look
     -- Define custom order of statusline components
