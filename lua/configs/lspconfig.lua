@@ -6,13 +6,13 @@ local capabilities = nvchad_lsp.capabilities
 -- Additional on_attach function to add keymaps
 local on_attach_with_keymaps = function(client, bufnr)
   on_attach(client, bufnr)
-  
+
   -- Don't set up keymaps if server doesn't support them
   if client.server_capabilities.documentFormattingProvider then
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>fm', '<cmd>lua vim.lsp.buf.format { async = true }<CR>', { 
-      desc = "Format file", 
-      noremap = true, 
-      silent = true 
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>fm", "<cmd>lua vim.lsp.buf.format { async = true }<CR>", {
+      desc = "Format file",
+      noremap = true,
+      silent = true,
     })
   end
 end
@@ -21,15 +21,15 @@ end
 -- Will handle JS/TS diagnostics primarily via lint.nvim to prevent duplication
 local servers = {
   "html",
-  "cssls", 
+  "cssls",
   "jsonls",
   "bashls",
-  "denols",         -- Deno
-  "emmet_ls",       -- HTML/CSS emmet
-  "tailwindcss",    -- Tailwind CSS
-  "lua_ls",         -- Lua (for Neovim config)
-  "dockerls",       -- Docker
-  "yamlls",         -- YAML files
+  "denols", -- Deno
+  "emmet_ls", -- HTML/CSS emmet
+  "tailwindcss", -- Tailwind CSS
+  "lua_ls", -- Lua (for Neovim config)
+  "dockerls", -- Docker
+  "yamlls", -- YAML files
 }
 
 -- Add specific JavaScript/TypeScript server that doesn't conflict with ESLint
@@ -47,35 +47,54 @@ if mason_lspconfig_ok then
           on_attach = on_attach_with_keymaps,
           capabilities = capabilities,
         }
-        
+
         if server_name == "denols" then
           opts.root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc", ".git")
           opts.single_file_support = false
         elseif server_name == "emmet_ls" then
-          opts.filetypes = { "html", "css", "javascript", "typescript", "javascriptreact", "typescriptreact", "svelte", "vue", "astro", "blade" }
+          opts.filetypes = {
+            "html",
+            "css",
+            "javascript",
+            "typescript",
+            "javascriptreact",
+            "typescriptreact",
+            "svelte",
+            "vue",
+            "astro",
+            "blade",
+          }
         elseif server_name == "tailwindcss" then
-          opts.root_dir = lspconfig.util.root_pattern("tailwind.config.js", "tailwind.config.ts", "postcss.config.js", "postcss.config.ts", "package.json", ".git")
+          opts.root_dir = lspconfig.util.root_pattern(
+            "tailwind.config.js",
+            "tailwind.config.ts",
+            "postcss.config.js",
+            "postcss.config.ts",
+            "package.json",
+            ".git"
+          )
           opts.settings = {
             tailwindCSS = {
               includeLanguages = {
                 javascript = "javascript",
-                typescript = "typescript", 
-                "javascriptreact", "typescriptreact",
+                typescript = "typescript",
+                "javascriptreact",
+                "typescriptreact",
                 svelte = "html",
                 vue = "vue",
                 astro = "astro",
                 php = "html", -- For Laravel blade files (as a workaround)
               },
-            }
+            },
           }
         elseif server_name == "volar" then
           opts.root_dir = lspconfig.util.root_pattern("package.json", "vue.config.js", ".git")
           opts.filetypes = { "vue", "javascript", "typescript", "javascriptreact", "typescriptreact" }
         end
-        
+
         lspconfig[server_name].setup(opts)
       end,
-    }
+    },
   })
 else
   -- Fallback for older configuration if mason-lspconfig fails
@@ -85,7 +104,7 @@ else
       on_attach = on_attach_with_keymaps,
       capabilities = capabilities,
     }
-    
+
     lspconfig[server].setup(opts)
   end
 end

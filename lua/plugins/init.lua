@@ -502,10 +502,57 @@ return {
     "nvim-treesitter/nvim-treesitter-context",
     opts = {},
   },
-  -- TS Autotag
+  -- TS Autotag: Auto close HTML/XML tags
   {
     "windwp/nvim-ts-autotag",
-    opts = {},
+    config = function()
+      require("nvim-ts-autotag").setup({
+        autotag = {
+          enable = true,
+          filetypes = {
+            "html",
+            "javascript",
+            "javascriptreact", 
+            "typescript",
+            "typescriptreact",
+            "svelte",
+            "vue",
+            "tsx",
+            "jsx",
+            "xml",
+            "php",
+            "handlebars",
+          },
+        }
+      })
+    end,
+  },
+  -- Surround: Better text objects for HTML/XML tags
+  {
+    "kylechui/nvim-surround",
+    version = "*",
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup({
+        surrounds = {
+          ["t"] = {
+            -- Custom HTML tag surround
+            add = function()
+              local tagName = vim.fn.input("Tag name: ")
+              return { { "<" .. tagName .. ">" }, { "</" .. tagName .. ">" } }
+            end,
+          }
+        },
+        aliases = {
+          ["h"] = "t", -- HTML tag alias
+        }
+      })
+    end
+  },
+  -- Rainbow: Highlight matching HTML/XML tags
+  {
+    "HiPhish/nvim-ts-rainbow2",
+    event = "VeryLazy",
   },
   -- Git Fugitive
   {

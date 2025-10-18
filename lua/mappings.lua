@@ -538,3 +538,105 @@ map("n", "<leader>tv", ":vsplit term://$SHELL<CR>", { desc = "Vertical split ter
 map("n", "<leader>th", ":split term://$SHELL<CR>", { desc = "Horizontal split terminal" })
 map("t", "<A-[>", "<C-\\><C-N>", { desc = "Terminal to Normal mode" }) -- Alt+[ untuk keluar dari terminal
 map("t", "<A-]>", "<C-\\><C-N><C-w>", { desc = "Terminal escape and window command" }) -- Alt+] untuk keluar dan window command
+
+-- Function to rename HTML/XML tags (works with JSX/TSX)
+local function rename_html_tag()
+  local function get_current_tag()
+    local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+    local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1]
+    if not line then return nil, nil, nil end
+
+    -- Find tag under cursor
+    local start_col, end_col = line:find("<[/]?%w+[^>]*>", col)
+    if not start_col then
+      -- Try to find closing tag if cursor is after >
+      start_col, end_col = line:find("</%w+[^>]*>", col)
+    end
+    
+    if start_col then
+      local tag_content = line:sub(start_col, end_col)
+      local is_closing = tag_content:match("^</")
+      local tag_name = tag_content:match("<[/]?([^%s/>]+)")
+      
+      if tag_name then
+        return tag_name, start_col - 1, is_closing, row -- Return 0-indexed column
+      end
+    end
+    return nil, nil, nil
+  end
+
+  local function find_matching_tag(tag_name, is_closing, start_row, start_col)
+    local current_row, _ = unpack(vim.api.nvim_win_get_cursor(0))
+    local total_lines = vim.api.nvim_buf_line_count(0)
+    local search_backward = is_closing
+    
+    if search_backward then
+      -- Search backward for opening tag
+      for row = start_row - 1, 1, -1 do
+        local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1] or ""
+        local pattern = "<" .. tag_name .. "[^>]*>"
+        local s, e = line:find(pattern, 1, true)
+        if s and not line:sub(s, e):match("^</") then
+          return row, s - 1
+        end
+      end
+    else
+      -- Search forward for closing tag
+      for row = start_row + 1, total_lines do
+        local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1] or ""
+        local pattern = "</" .. tag_name .. "[^>]*>"
+        local s, e = line:find(pattern, 1, true)
+        if s then
+          return row, s - 1
+        end
+      end
+    end
+    return nil, nil
+  end
+
+  local tag_name, tag_col, is_closing = get_current_tag()
+  if not tag_name then
+    vim.notify("No HTML tag found under cursor", vim.log.levels.WARN)
+    return
+  end
+
+  local new_tag = vim.fn.input("Rename '" .. tag_name .. "' to: ", tag_name)
+  if new_tag == "" or new_tag == tag_name then
+    return
+  end
+
+  -- Get current cursor position
+  local current_row, current_col = unpack(vim.api.nvim_win_get_cursor(0))
+  
+  -- Replace current tag
+  local current_line = vim.api.nvim_buf_get_lines(0, current_row - 1, current_row, false)[1]
+  -- First replace opening tags with attributes
+  local updated_line = current_line:gsub("<" .. tag_name .. "%s*([^>]-)>", function(attributes)
+    return "<" .. new_tag .. " " .. attributes .. ">"
+  end)
+  -- Then replace opening tags without attributes
+  updated_line = updated_line:gsub("<" .. tag_name .. ">", "<" .. new_tag .. ">")
+  -- Finally replace closing tags
+  updated_line = updated_line:gsub("</" .. tag_name .. ">", "</" .. new_tag .. ">")
+  vim.api.nvim_buf_set_lines(0, current_row - 1, current_row, false, {updated_line})
+  
+  -- Find and replace matching tag
+  local match_row, match_col = find_matching_tag(tag_name, is_closing, current_row, tag_col)
+  if match_row then
+    local match_line = vim.api.nvim_buf_get_lines(0, match_row - 1, match_row, false)[1]
+    -- First replace opening tags with attributes
+    local updated_match_line = match_line:gsub("<" .. tag_name .. "%s*([^>]-)>", function(attributes)
+      return "<" .. new_tag .. " " .. attributes .. ">"
+    end)
+    -- Then replace opening tags without attributes
+    updated_match_line = updated_match_line:gsub("<" .. tag_name .. ">", "<" .. new_tag .. ">")
+    -- Finally replace closing tags
+    updated_match_line = updated_match_line:gsub("</" .. tag_name .. ">", "</" .. new_tag .. ">")
+    vim.api.nvim_buf_set_lines(0, match_row - 1, match_row, false, {updated_match_line})
+  end
+
+  vim.notify("Renamed tag '" .. tag_name .. "' to '" .. new_tag .. "'", vim.log.levels.INFO)
+end
+
+-- Keymap to rename HTML/XML tags
+map("n", "<leader>rt", rename_html_tag, { desc = "Rename HTML/XML tag and its pair" })
