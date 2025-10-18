@@ -6,7 +6,7 @@
 local M = {}
 
 M.base46 = {
-  theme = "everblush",
+  theme = "solarized_osaka",
 
   -- hl_override = {
   -- 	Comment = { italic = true },
@@ -21,7 +21,7 @@ M.ui = {
     lazyload = false,
   },
   statusline = {
-    theme = "vscode_colored",
+    theme = "minimal",
     -- Choose separator style: "default", "arrow", "round", "slant", or "block"
     separator_style = "arrow", -- Using arrow separators for modern look
     -- Define custom order of statusline components

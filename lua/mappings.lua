@@ -9,7 +9,6 @@ map({ "n", "t" }, "<C-k>", function()
   require("floaterm.api").cycle_term_bufs("next")
 end, { desc = "Cycle to next Floaterm" })
 
-local opts = { silent = true, desc = "Luxmotion: " }
 local prefix = "<leader>m" -- Prefix untuk mini.nvim keymaps
 
 map("n", prefix, "", { desc = "mini.nvim" }) -- Grouping untuk mini.nvim
@@ -149,7 +148,7 @@ end, { desc = "Open Telescope File Browser" })
 -- Nvim-Notify keymaps
 map("n", "<leader>u", "", { desc = "Notify" })
 map("n", "<leader>uN", function()
-  require("notify").dismiss { silent = true, pending = true }
+  require("notify").dismiss({ silent = true, pending = true })
 end, { desc = "Delete all Notifications" })
 
 -- Keymap untuk NvimTree
@@ -235,9 +234,6 @@ local function save_file()
   end
 end
 map({ "n", "i", "v" }, "<C-s>", save_file, { desc = "Save file (if modified)" })
-
--- Theme switcher
-map("n", "<leader>th", "<cmd>Telescope themes<CR>", { desc = "Switch NvChad theme" })
 
 -- Auto format
 map("n", "<leader>fm", function()
@@ -389,6 +385,133 @@ map("n", "<leader>as", "<cmd>Autosave toggle<CR>", { desc = "Toggle autosave" })
 map("n", "<leader>ae", "<cmd>Autosave on<CR>", { desc = "Enable autosave" })
 map("n", "<leader>ad", "<cmd>Autosave off<CR>", { desc = "Disable autosave" })
 map("n", "<leader>at", "<cmd>Autosave status<CR>", { desc = "Check autosave status" })
+
+-- Theme switching functionality
+local function switch_theme(theme_name)
+  -- Update the theme in the chadrc config
+  local chadrc_path = vim.fn.stdpath("config") .. "/lua/chadrc.lua"
+  local chadrc_backup_path = vim.fn.stdpath("config") .. "/lua/chadrc.lua.bak"
+
+  -- Create backup of the original file
+  local original_content = {}
+  for line in io.lines(chadrc_path) do
+    table.insert(original_content, line)
+  end
+
+  local backup_file = io.open(chadrc_backup_path, "w")
+  if backup_file then
+    for _, line in ipairs(original_content) do
+      backup_file:write(line .. "\n")
+    end
+    backup_file:close()
+  end
+
+  -- Read the original file content
+  local lines = {}
+  for line in io.lines(chadrc_path) do
+    table.insert(lines, line)
+  end
+
+  -- Find and replace the theme line
+  local found_theme = false
+  for i, line in ipairs(lines) do
+    if line:match('theme%s*=%s*"') then
+      lines[i] = line:gsub('theme%s*=%s*"[^"]*"', 'theme = "' .. theme_name .. '"')
+      found_theme = true
+    end
+  end
+
+  if not found_theme then
+    vim.notify("Could not find theme setting in chadrc.lua", vim.log.levels.WARN)
+    return
+  end
+
+  -- Write the updated content back to the file
+  local file = io.open(chadrc_path, "w")
+  if file then
+    for _, line in ipairs(lines) do
+      file:write(line .. "\n")
+    end
+    file:close()
+    -- Apply the new theme
+    vim.g.nvchad_theme = theme_name
+    dofile(vim.g.base46_cache .. "defaults")
+    vim.notify("Theme changed to: " .. theme_name .. ". Backup created at: " .. chadrc_backup_path, vim.log.levels.INFO)
+  else
+    vim.notify("Could not update theme in chadrc.lua", vim.log.levels.ERROR)
+  end
+end
+
+-- Theme picker function
+local function theme_picker()
+  local themes = {
+    "onedark",
+    "gruvbox",
+    "tokyonight",
+    "dracula",
+    "nightowl",
+    "edge",
+    "solarized_dark",
+    "solarized_light",
+    "solarized_osaka",
+    "everforest",
+    "github_dark",
+    "github_dark_dimmed",
+    "ayu_dark",
+    "ayu_mirage",
+    "material",
+    "nord",
+    "jellybeans",
+    "dark_red",
+    "default",
+  }
+
+  local input = vim.fn.input("Choose a theme: ", "", "customlist,v:lua.vim.inspect(" .. vim.inspect(themes) .. ")")
+  if input ~= "" then
+    switch_theme(input)
+  end
+end
+
+-- Theme switching keymaps
+map("n", "<leader>th", ":Telescope themes<CR>", { desc = "Search for themes with Telescope" })
+
+-- Register theme switching commands
+vim.api.nvim_create_user_command("Theme", function(opts)
+  if opts.args ~= "" then
+    switch_theme(opts.args)
+  else
+    theme_picker()
+  end
+end, {
+  nargs = "?",
+  desc = "Switch NvChad theme",
+  complete = function(arg_lead, cmd_line, cursor_pos)
+    local themes = {
+      "onedark",
+      "gruvbox",
+      "tokyonight",
+      "dracula",
+      "nightowl",
+      "edge",
+      "solarized_dark",
+      "solarized_light",
+      "solarized_osaka",
+      "everforest",
+      "github_dark",
+      "github_dark_dimmed",
+      "ayu_dark",
+      "ayu_mirage",
+      "material",
+      "nord",
+      "jellybeans",
+      "dark_red",
+      "default",
+    }
+    return vim.tbl_filter(function(theme)
+      return vim.startswith(theme, arg_lead)
+    end, themes)
+  end,
+})
 
 -- Search and Replace
 map("n", "<leader>sr", ":%s/", { desc = "Search and replace in file" })
