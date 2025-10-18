@@ -105,8 +105,9 @@ end, { desc = "Close all folds" })
 -- Telescope File Browser keymap
 map("n", "<leader>te", function()
   require("telescope").extensions.file_browser.file_browser({
-    path = "%:p:h",
+    path = vim.fn.expand("%:p:h"), -- Memperbaiki masalah karakter spasi
     select_buffer = true,
+    hijack_cwd = true, -- Mengikuti direktori saat ini
     attach_mappings = function(prompt_bufnr, map)
       map("i", "<C-s>", function()
         local current_picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
@@ -520,7 +521,7 @@ map("n", "<leader>src", ":%s//gc<Left><Left>", { desc = "Search and replace all 
 
 -- Tab management
 map("n", "<leader>tn", ":tabnew<CR>", { desc = "New tab" })
-map("n", "<leader>te", ":tabedit ", { desc = "Tab edit file" })
+map("n", "<leader>tfe", ":tabedit ", { desc = "Tab edit file" }) -- Mengganti dari <leader>te ke <leader>tef
 map("n", "<leader>tc", ":tabclose<CR>", { desc = "Close current tab" })
 map("n", "<leader>to", ":tabonly<CR>", { desc = "Close other tabs" })
 map("n", "<leader>tf", ":tabfirst<CR>", { desc = "Go to first tab" })
@@ -535,5 +536,5 @@ end
 map("n", "<leader>tt", ":terminal<CR>", { desc = "Open terminal" })
 map("n", "<leader>tv", ":vsplit term://$SHELL<CR>", { desc = "Vertical split terminal" })
 map("n", "<leader>th", ":split term://$SHELL<CR>", { desc = "Horizontal split terminal" })
-map("t", "<A-[>", "<C-\\><C-N>", { desc = "Terminal to Normal mode" })  -- Alt+[ untuk keluar dari terminal
-map("t", "<A-]>", "<C-\\><C-N><C-w>", { desc = "Terminal escape and window command" })  -- Alt+] untuk keluar dan window command
+map("t", "<A-[>", "<C-\\><C-N>", { desc = "Terminal to Normal mode" }) -- Alt+[ untuk keluar dari terminal
+map("t", "<A-]>", "<C-\\><C-N><C-w>", { desc = "Terminal escape and window command" }) -- Alt+] untuk keluar dan window command
