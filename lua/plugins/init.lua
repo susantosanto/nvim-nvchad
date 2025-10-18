@@ -821,6 +821,44 @@ return {
       require("neodim").setup(opts)
     end,
   },
+  -- Indent blankline: Show indentation guides (minimized)
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    opts = {
+      indent = { 
+        char = "",  -- Empty character to make indent guides invisible
+      },
+      whitespace = {
+        remove_blankline_trail = true,
+      },
+      scope = { 
+        char = "", 
+        show_start = false, 
+        show_end = false 
+      },
+      exclude = {
+        buftypes = {
+          "terminal",
+          "nofile",
+          "prompt",
+        },
+        filetypes = {
+          "help",
+          "startify",
+          "dashboard",
+          "lazy",
+          "neogitstatus",
+          "NvimTree",
+          "Trouble",
+          "text",
+          "markdown",
+          "json",
+          "txt",
+        },
+      },
+    },
+  },
   -- Twilight: Reduce visual clutter in surrounding context
   {
     "folke/twilight.nvim",
