@@ -517,3 +517,16 @@ end, {
 map("n", "<leader>sr", ":%s/", { desc = "Search and replace in file" })
 map("n", "<leader>sra", ":%s//g<Left><Left>", { desc = "Search and replace all in file" })
 map("n", "<leader>src", ":%s//gc<Left><Left>", { desc = "Search and replace all in file with confirm" })
+
+-- Tab management
+map("n", "<leader>tn", ":tabnew<CR>", { desc = "New tab" })
+map("n", "<leader>te", ":tabedit ", { desc = "Tab edit file" })
+map("n", "<leader>tc", ":tabclose<CR>", { desc = "Close current tab" })
+map("n", "<leader>to", ":tabonly<CR>", { desc = "Close other tabs" })
+map("n", "<leader>tf", ":tabfirst<CR>", { desc = "Go to first tab" })
+map("n", "<leader>tl", ":tablast<CR>", { desc = "Go to last tab" })
+map("n", "<leader>tp", ":tabprevious<CR>", { desc = "Go to previous tab" })
+-- Mapping untuk pergi ke tab tertentu (1-9)
+for i = 1, 9 do
+  map("n", "<leader>" .. i, ":" .. i .. "tabnext<CR>", { desc = "Go to tab " .. i })
+end

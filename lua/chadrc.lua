@@ -6,7 +6,8 @@
 local M = {}
 
 M.base46 = {
-  theme = "solarized_osaka",
+  theme = "gruvchad",
+  transparency = true,
 
   -- hl_override = {
   -- 	Comment = { italic = true },
@@ -17,13 +18,14 @@ M.base46 = {
 M.nvdash = { load_on_startup = false }
 M.ui = {
   tabufline = {
-    enabled = false,
+    enabled = true, -- Aktifkan tabufline agar buffers terlihat
     lazyload = false,
+    order = { "treeOffset", "buffers", "tabs", "btns" },
   },
   statusline = {
     theme = "minimal",
     -- Choose separator style: "default", "arrow", "round", "slant", or "block"
-    separator_style = "arrow", -- Using arrow separators for modern look
+    separator_style = "block", -- Using arrow separators for modern look
     -- Define custom order of statusline components
     -- Hide statusline on focus loss
     hide_on_focus_loss = false,
