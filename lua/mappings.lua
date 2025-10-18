@@ -530,3 +530,10 @@ map("n", "<leader>tp", ":tabprevious<CR>", { desc = "Go to previous tab" })
 for i = 1, 9 do
   map("n", "<leader>" .. i, ":" .. i .. "tabnext<CR>", { desc = "Go to tab " .. i })
 end
+
+-- Terminal management
+map("n", "<leader>tt", ":terminal<CR>", { desc = "Open terminal" })
+map("n", "<leader>tv", ":vsplit term://$SHELL<CR>", { desc = "Vertical split terminal" })
+map("n", "<leader>th", ":split term://$SHELL<CR>", { desc = "Horizontal split terminal" })
+map("t", "<A-[>", "<C-\\><C-N>", { desc = "Terminal to Normal mode" })  -- Alt+[ untuk keluar dari terminal
+map("t", "<A-]>", "<C-\\><C-N><C-w>", { desc = "Terminal escape and window command" })  -- Alt+] untuk keluar dan window command
