@@ -280,6 +280,217 @@ return {
         enable = true,
         additional_vim_regex_highlighting = false,
       },
+      textobjects = {
+        select = {
+          enable = true,
+          lookahead = true,
+          keymaps = {
+            ["af"] = "@function.outer",
+            ["if"] = "@function.inner",
+            ["ac"] = "@class.outer",
+            ["ic"] = "@class.inner",
+            ["aa"] = "@parameter.outer",
+            ["ia"] = "@parameter.inner",
+            ["at"] = "@statement.outer",
+            ["it"] = "@statement.inner",
+            ["as"] = "@scope",
+            ["is"] = "@scope",
+            ["al"] = "@loop.outer",
+            ["il"] = "@loop.inner",
+            ["ai"] = "@conditional.outer",
+            ["ii"] = "@conditional.inner",
+            ["ad"] = "@comment.outer",
+            ["id"] = "@comment.inner",
+          },
+        },
+        swap = {
+          enable = true,
+          swap_next = {
+            ["<leader>na"] = "@parameter.inner",
+            ["<leader>nf"] = "@function.outer",
+            ["<leader>nc"] = "@class.outer",
+          },
+          swap_previous = {
+            ["<leader>pa"] = "@parameter.inner",
+            ["<leader>pf"] = "@function.outer",
+            ["<leader>pc"] = "@class.outer",
+          },
+        },
+        move = {
+          enable = true,
+          set_jumps = true,
+          goto_next_start = {
+            ["]m"] = "@function.outer",
+            ["]]"] = "@class.outer",
+          },
+          goto_next_end = {
+            ["]M"] = "@function.outer",
+            ["]["] = "@class.outer",
+          },
+          goto_previous_start = {
+            ["[m"] = "@function.outer",
+            ["[["] = "@class.outer",
+          },
+          goto_previous_end = {
+            ["[M"] = "@function.outer",
+            ["[]"] = "@class.outer",
+          },
+        },
+      },
+    },
+  },
+  -- Treesitter Textobjects: Additional configuration
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    enabled = false, -- Already configured as dependency above
+  },
+  -- Neogen: Generate function/class documentation
+  {
+    "danymat/neogen",
+    dependencies = "nvim-treesitter/nvim-treesitter",
+    opts = {
+      snippet_engine = "luasnip",
+    },
+    keys = {
+      { "<leader>cd", function() require("neogen").generate() end, desc = "Generate annotation for current function/class" },
+    },
+    config = true,
+  },
+  -- Todo Comments: Highlight and search for todo comments
+  {
+    "folke/todo-comments.nvim",
+    dependencies = "nvim-lua/plenary.nvim",
+    opts = {
+      signs = true, -- show icons in the signs column
+      sign_priority = 8, -- sign priority
+      -- keywords recognized as todo comments
+      keywords = {
+        FIX = { 
+          icon = " ", -- icon used for the sign, and in search results
+          color = "error", -- can be a hex color, or a named color (see below)
+          alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
+        },
+        TODO = { icon = " ", color = "info" },
+        HACK = { icon = " ", color = "warning" },
+        WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
+        PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "BENCH", "BENCHMARK" } },
+        NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+      },
+      gui_style = {
+        fg = "NONE", -- The gui style to use for the fg highlight group.
+        bg = "BOLD", -- The gui style to use for the bg highlight group.
+      },
+      merge_keywords = true, -- when true, custom keywords will be merged with the defaults
+      -- highlighting of the line containing the todo comment
+      highlight = {
+        multiline = true, -- enable multine todo comments
+        multiline_pattern = "^.", -- lua pattern to match the next multiline from the start of the matched keyword
+        multiline_context = 10, -- extra lines that will be re-evaluated when changing a line
+        before = "", -- "fg" or "bg" or empty
+        keyword = "wide", -- "fg", "bg", "wide", "wide_bg", "wide_fg" or empty.
+        after = "fg", -- "fg" or "bg" or empty
+        pattern = [[.*<(KEYWORDS)\s*:]], -- pattern or table of patterns, used for highlighting (vim regex)
+        comments_only = true, -- uses treesitter to identify comments in the buffer, if it's not available it falls back to vim.v.commentleader
+        max_line_len = 400, -- ignore lines longer than this
+        exclude = {}, -- list of file types to exclude highlighting
+      },
+      -- list of named colors where we try to extract the guifg from the
+      -- list of highlight groups or use the hex color if hl not found as a fallback
+      colors = {
+        error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
+        warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
+        info = { "DiagnosticInfo", "#2563EB" },
+        hint = { "DiagnosticHint", "#10B981" },
+        default = { "Identifier", "#7C3AED" },
+        test = { "Identifier", "#FF00FF" },
+      },
+      search = {
+        command = "TodoTelescope",
+        args = {
+          -- what to search for in todo-comments
+          -- NOTE: we don't include '@' at the beginning to support both
+          -- `-- TODO` and `# TODO` and other comment styles
+          pattern = [[\b\w*TODO\b]], -- match without the extra colon
+        },
+      },
+    },
+    -- stylua: ignore
+    keys = {
+      { "]t", function() require("todo-comments").jump_next() end, desc = "Next todo comment" },
+      { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous todo comment" },
+      { "<leader>ft", "<cmd>TodoTelescope<cr>", desc = "Find todo comments" },
+    },
+  },
+  -- Typescript: Enhanced TypeScript/JavaScript support
+  {
+    "jose-elias-alvarez/typescript.nvim",
+    opts = {
+      disable_commands = false, -- prevent the plugin from creating commands
+      debug = false, -- enable debug logging for commands
+      go_to_source_definition = {
+        fallback = true, -- fall back to standard LSP definition on failure
+      },
+      server = { -- pass options to lspconfig's setup method
+        settings = {
+          typescript = {
+            inlayHints = {
+              includeInlayParameterNameHints = "all",
+              includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayVariableTypeHints = true,
+              includeInlayPropertyDeclarationTypeHints = true,
+              includeInlayFunctionLikeReturnTypeHints = true,
+              includeInlayEnumMemberValueHints = true,
+            },
+          },
+          javascript = {
+            inlayHints = {
+              includeInlayParameterNameHints = "all",
+              includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayVariableTypeHints = true,
+              includeInlayPropertyDeclarationTypeHints = true,
+              includeInlayFunctionLikeReturnTypeHints = true,
+              includeInlayEnumMemberValueHints = true,
+            },
+          },
+        },
+      },
+    },
+  },
+  -- Lspkind: VS Code-like pictograms for completion items
+  {
+    "onsails/lspkind.nvim",
+    opts = {
+      mode = "symbol",
+      preset = "default",
+      symbol_map = {
+        Text = "󰉿",
+        Method = "󰊕",
+        Function = "󰊕",
+        Constructor = "",
+        Field = "󰜢",
+        Variable = "󰀫",
+        Class = "󰠱",
+        Interface = "",
+        Module = "󰕳",
+        Property = "󰖷",
+        Unit = "󰑭",
+        Value = "󰎠",
+        Enum = "",
+        Keyword = "󰌋",
+        Snippet = "󰩫",
+        Color = "󰏘",
+        File = "󰈙",
+        Reference = "󰈥",
+        Folder = "󰉋",
+        EnumMember = "",
+        Constant = "󰏿",
+        Struct = "󰙅",
+        Event = "",
+        Operator = "󰆕",
+        TypeParameter = "󰊄",
+      },
     },
   },
   -- Telescope

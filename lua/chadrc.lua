@@ -23,7 +23,7 @@ M.ui = {
     order = { "treeOffset", "buffers", "tabs", "btns" },
   },
   statusline = {
-    theme = "minimal",
+    theme = "vscode_colored",
     -- Choose separator style: "default", "arrow", "round", "slant", or "block"
     separator_style = "block", -- Using arrow separators for modern look
     -- Define custom order of statusline components
