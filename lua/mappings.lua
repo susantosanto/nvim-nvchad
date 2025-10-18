@@ -474,7 +474,7 @@ local function theme_picker()
 end
 
 -- Theme switching keymaps
-map("n", "<leader>th", ":Telescope themes<CR>", { desc = "Search for themes with Telescope" })
+map("n", "<leader>td", ":Telescope themes<CR>", { desc = "Search for themes with Telescope" })
 
 -- Register theme switching commands
 vim.api.nvim_create_user_command("Theme", function(opts)
