@@ -651,3 +651,5 @@ end
 
 -- Keymap to rename HTML/XML tags
 map("n", "<leader>rt", rename_html_tag, { desc = "Rename HTML/XML tag and its pair" })
+
+

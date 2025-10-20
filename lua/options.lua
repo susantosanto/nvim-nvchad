@@ -6,6 +6,7 @@ require("nvchad.options")
 local o = vim.o
 o.relativenumber = true
 o.number = true
+o.signcolumn = "yes"  -- Always show sign column for todo-comments icons
 o.cursorline = true -- Highlight current cursor line
 
 -- Enhanced folding options (will be managed by ufo plugin)

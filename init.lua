@@ -1,17 +1,17 @@
-vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
+vim.g.base46_cache = vim.fn.stdpath("data") .. "/base46/"
 vim.g.mapleader = " "
 
 -- bootstrap lazy and all plugins
-local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not vim.uv.fs_stat(lazypath) then
   local repo = "https://github.com/folke/lazy.nvim.git"
-  vim.fn.system { "git", "clone", "--filter=blob:none", repo, "--branch=stable", lazypath }
+  vim.fn.system({ "git", "clone", "--filter=blob:none", repo, "--branch=stable", lazypath })
 end
 
 vim.opt.rtp:prepend(lazypath)
 
-local lazy_config = require "configs.lazy"
+local lazy_config = require("configs.lazy")
 
 -- Override nvim_buf_delete to handle buffer errors
 local original_buf_delete = vim.api.nvim_buf_delete
@@ -53,7 +53,7 @@ vim.diagnostic.config({
       [vim.diagnostic.severity.ERROR] = " ",
       [vim.diagnostic.severity.WARN] = " ",
       [vim.diagnostic.severity.HINT] = "󰌶 ",
-      [vim.diagnostic.severity.INFO] = " "
+      [vim.diagnostic.severity.INFO] = " ",
     },
     numhl = false, -- Don't highlight the line number, just the sign column
   },
@@ -105,8 +105,8 @@ require("lazy").setup({
 dofile(vim.g.base46_cache .. "defaults")
 dofile(vim.g.base46_cache .. "statusline")
 
-require "options"
-require "autocmds"
+require("options")
+require("autocmds")
 
 -- Apply diagnostic configuration again after all plugins are loaded
 -- This ensures it overrides any default configuration from NvChad or other plugins
@@ -121,7 +121,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
             [vim.diagnostic.severity.ERROR] = " ",
             [vim.diagnostic.severity.WARN] = " ",
             [vim.diagnostic.severity.HINT] = "󰌶 ",
-            [vim.diagnostic.severity.INFO] = " "
+            [vim.diagnostic.severity.INFO] = " ",
           },
           numhl = false, -- Don't highlight the line number, just the sign column
         },
@@ -131,9 +131,65 @@ vim.api.nvim_create_autocmd("VimEnter", {
       })
     end)
   end,
-  desc = "Reapply diagnostic configuration after startup"
+  desc = "Reapply diagnostic configuration after startup",
 })
 
+-- Load mappings
 vim.schedule(function()
-  require "mappings"
+  require("mappings")
 end)
+
+-- Ensure todo-comments is initialized with correct configuration early
+if pcall(require, "todo-comments") then
+  -- Apply our todo-comments configuration to make sure it's properly initialized
+  require("todo-comments").setup({
+    signs = true,
+    sign_priority = 8,
+    keywords = {
+      FIX = {
+        icon = "󰁍 ",
+        color = "error",
+        alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
+      },
+      TODO = { icon = "󰌶 ", color = "info" },
+      HACK = { icon = "󰊙 ", color = "warning" },
+      WARN = { icon = "󰌱 ", color = "warning", alt = { "WARNING", "XXX" } },
+      PERF = { icon = "󰓅 ", alt = { "OPTIM", "PERFORMANCE", "BENCH", "BENCHMARK" } },
+      NOTE = { icon = "󰋽 ", color = "hint", alt = { "INFO" } },
+      BUG = { icon = "󰨰 ", color = "error" },
+    },
+    gui_style = {
+      fg = "BOLD",
+      bg = "italic",
+    },
+    merge_keywords = true,
+    highlight = {
+      multiline = true,
+      multiline_pattern = "^.",
+      multiline_context = 10,
+      before = "fg",
+      keyword = "wide",
+      after = "fg",
+      pattern = [[.*<(KEYWORDS)\s*:]],
+      comments_only = true,
+      max_line_len = 400,
+      exclude = {},
+    },
+    colors = {
+      error = { "DiagnosticError", "ErrorMsg", "#E74C3C" },
+      warning = { "DiagnosticWarn", "WarningMsg", "#F39C12" },
+      info = { "DiagnosticInfo", "#3498DB" },
+      hint = { "DiagnosticHint", "#1ABC9C" },
+      default = { "Identifier", "#9B59B6" },
+      test = { "Identifier", "#8E44AD" },
+    },
+    search = {
+      command = "TodoTelescope",
+      args = {
+        pattern = [[\b\w*TODO\b]],
+      },
+    },
+  })
+end
+
+vim.opt.signcolumn = "yes"
