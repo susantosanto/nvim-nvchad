@@ -281,6 +281,11 @@ map("n", "<leader>x", function()
   end
 end, { desc = "Close buffer" })
 
+-- Close Buffers (close-buffers.nvim)
+map("n", "<leader>ch", "<cmd>lua require('close_buffers').delete({type = 'hidden'})<CR>", { desc = "Close hidden buffers" })
+map("n", "<leader>cu", "<cmd>lua require('close_buffers').delete({type = 'nameless'})<CR>", { desc = "Close nameless buffers" })
+map("n", "<leader>cb", "<cmd>lua require('close_buffers').delete({type = 'this'})<CR>", { desc = "Close current buffer (preserve layout)" })
+
 -- Plugin Manager (Lazy) keymap
 map("n", "<leader>lp", "<cmd>Lazy<CR>", { desc = "Lazy Plugin Manager" })
 
@@ -328,6 +333,12 @@ end, { desc = "Messages half page up" })
 map("n", "<S-C-d>", function()
   require("opencode").command("messages_half_page_down")
 end, { desc = "Messages half page down" })
+
+-- Bracket navigation (built-in % functionality plus alternatives)
+-- Default % key works for matching brackets (), [], {}
+-- Adding additional keymaps for convenience
+-- The % key is already mapped by default in Neovim, so we don't need to remap it
+map("n", "<leader>bb", "%", { desc = "Jump to matching bracket" })
 
 -- No highlight (remove search highlight)
 map("n", "<leader>nh", ":nohlsearch<CR>", { desc = "Clear search highlight" })
