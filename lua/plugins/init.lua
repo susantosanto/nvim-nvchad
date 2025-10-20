@@ -105,9 +105,9 @@ return {
       legacy_computing_symbols_support = false,
     },
   },
-  -- Alpha dashboard (centered header)
+  -- Dashboard-nvim (modern dashboard)
   {
-    "goolord/alpha-nvim",
+    "nvimdev/dashboard-nvim",
     event = "VimEnter",
     config = function()
       require("configs.alpha_center")

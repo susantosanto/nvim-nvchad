@@ -192,4 +192,11 @@ if pcall(require, "todo-comments") then
   })
 end
 
+-- Setup dashboard-nvim highlight groups
+vim.api.nvim_set_hl(0, 'DashboardHeader', { fg = '#7aa2f7', bold = true })
+vim.api.nvim_set_hl(0, 'DashboardFooter', { fg = '#a9b1d6', italic = true })
+vim.api.nvim_set_hl(0, 'DashboardCenterIcon', { fg = '#bb9af7' })
+vim.api.nvim_set_hl(0, 'DashboardCenterText', { fg = '#a9b1d6' })
+vim.api.nvim_set_hl(0, 'DashboardCenterKey', { fg = '#7dcfff', bold = true })
+
 vim.opt.signcolumn = "yes"
