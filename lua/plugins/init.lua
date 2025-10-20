@@ -221,6 +221,38 @@ return {
       require("configs.lspconfig")
     end,
   },
+  -- Linting support for web development
+  {
+    "mfussenegger/nvim-lint",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      local lint = require("lint")
+      lint.linters_by_ft = {
+        javascript = { "eslint_d" },
+        javascriptreact = { "eslint_d" },
+        typescript = { "eslint_d" },
+        typescriptreact = { "eslint_d" },
+        vue = { "eslint_d" },
+        svelte = { "eslint_d" },
+        python = { "flake8" },
+        php = { "phpcs" },
+      }
+      -- Auto-run linter on file changes
+      vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter" }, {
+        callback = function()
+          lint.try_lint()
+        end,
+      })
+    end,
+  },
+  -- Formatters for web development
+  {
+    "stevearc/conform.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require("configs.conform_custom").setup()
+    end,
+  },
   -- Treesitter
   {
     "nvim-treesitter/nvim-treesitter",
@@ -470,6 +502,56 @@ return {
               },
             },
           },
+        },
+      },
+    },
+    -- Biome for modern JavaScript/TypeScript linting and formatting
+    {
+      "neovim/nvim-lspconfig",
+      opts = {
+        servers = {
+          biome = {
+            cmd = { "biome", "lsp-proxy" },
+          },
+        },
+        setup = {
+          biome = function(_, opts)
+            require("lspconfig").biome.setup(opts)
+          end,
+        },
+      },
+    },
+    -- Volar for Vue.js development
+    {
+      "vuejs/language-tools",
+      ft = "vue",
+      dependencies = { "neovim/nvim-lspconfig" },
+      config = function()
+        require("lspconfig").volar.setup({
+          filetypes = { "vue", "javascript", "typescript", "javascriptreact", "typescriptreact" },
+          init_options = {
+            vue = {
+              hybridMode = false,
+            },
+          },
+        })
+      end,
+    },
+    -- EFM Langserver for generic LSP support (eslint, etc.)
+    {
+      "neovim/nvim-lspconfig",
+      opts = {
+        servers = {
+          efm = {
+            cmd = { "efm-langserver" },
+            init_options = { documentFormatting = true },
+            filetypes = { "lua", "python", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte", "php" },
+          },
+        },
+        setup = {
+          efm = function(_, opts)
+            require("lspconfig").efm.setup(opts)
+          end,
         },
       },
     },

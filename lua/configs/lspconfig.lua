@@ -30,6 +30,8 @@ local servers = {
   "lua_ls", -- Lua (for Neovim config)
   "dockerls", -- Docker
   "yamlls", -- YAML files
+  "ts_ls", -- TypeScript/JavaScript
+  "intelephense", -- PHP for Laravel
 }
 
 -- Add specific JavaScript/TypeScript server that doesn't conflict with ESLint
@@ -87,6 +89,34 @@ if mason_lspconfig_ok then
               },
             },
           }
+        elseif server_name == "ts_ls" then
+          opts.root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git")
+          opts.settings = {
+            typescript = {
+              inlayHints = {
+                includeInlayParameterNameHints = "all",
+                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHints = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayEnumMemberValueHints = true,
+              },
+            },
+            javascript = {
+              inlayHints = {
+                includeInlayParameterNameHints = "all",
+                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHints = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayEnumMemberValueHints = true,
+              },
+            },
+          }
+        elseif server_name == "intelephense" then
+          opts.root_dir = lspconfig.util.root_pattern("composer.json", "index.php", ".git")
         elseif server_name == "volar" then
           opts.root_dir = lspconfig.util.root_pattern("package.json", "vue.config.js", ".git")
           opts.filetypes = { "vue", "javascript", "typescript", "javascriptreact", "typescriptreact" }
