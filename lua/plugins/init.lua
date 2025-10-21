@@ -558,21 +558,7 @@ return {
         })
       end,
     },
-    -- Supermaven AI Code Completion
-    {
-      "supermaven-inc/supermaven-nvim",
-      event = "VeryLazy",
-      config = function()
-        require("supermaven-nvim").setup({
-          keymaps = {
-            accept_suggestion = "<M-l>",  -- Alt+l untuk accept suggestion
-            clear_suggestion = "<M-c>",  -- Alt+c untuk clear suggestion
-            accept_word = "<M-w>",       -- Alt+w untuk accept word
-          },
-          ignore_filetypes = { "TelescopePrompt", "NvimTree", "neo-tree" },
-        })
-      end,
-    },
+
     -- Visual-Multi: Multi cursor seperti di VS Code
     {
       "mg979/vim-visual-multi",
@@ -821,6 +807,7 @@ return {
         vim.o.timeout = true
         vim.o.timeoutlen = 300
       end,
+      opts = require("configs.which-key"),
     },
     -- Formatting
     {
@@ -1350,6 +1337,51 @@ return {
       config = function()
         require("telescope").load_extension("media_files")
       end,
+    },
+    -- Dropbar.nvim - Breadcrumbs like VS Code/ JetBrains
+    {
+      "Bekaboo/dropbar.nvim",
+      event = "VeryLazy",
+      opts = {
+        icons = {
+          enabled = true,
+          -- Use VS Code/ JetBrains style icons
+          kinds = {
+            File = { icon = "󰈙", hl = "dropbarFile" },
+            Module = { icon = "󰕳", hl = "dropbarModule" },
+            Namespace = { icon = "󰅪", hl = "dropbarNamespace" },
+            Package = { icon = "󰏗", hl = "dropbarPackage" },
+            Class = { icon = "󰠱", hl = "dropbarClass" },
+            Method = { icon = "󰊕", hl = "dropbarMethod" },
+            Property = { icon = "󰖷", hl = "dropbarProperty" },
+            Field = { icon = "󰜢", hl = "dropbarField" },
+            Constructor = { icon = "", hl = "dropbarConstructor" },
+            Enum = { icon = "", hl = "dropbarEnum" },
+            Interface = { icon = "", hl = "dropbarInterface" },
+            Function = { icon = "󰊕", hl = "dropbarFunction" },
+            Variable = { icon = "󰀫", hl = "dropbarVariable" },
+            Constant = { icon = "󰏿", hl = "dropbarConstant" },
+            String = { icon = "󰉾", hl = "dropbarString" },
+            Number = { icon = "󰎠", hl = "dropbarNumber" },
+            Boolean = { icon = "󰨙", hl = "dropbarBoolean" },
+            Array = { icon = "󰅪", hl = "dropbarArray" },
+            Object = { icon = "󰅩", hl = "dropbarObject" },
+            Key = { icon = "󰌋", hl = "dropbarKey" },
+            Null = { icon = "󰟢", hl = "dropbarNull" },
+            EnumMember = { icon = "", hl = "dropbarEnumMember" },
+            Struct = { icon = "󰙅", hl = "dropbarStruct" },
+            Event = { icon = "", hl = "dropbarEvent" },
+            Operator = { icon = "󰆕", hl = "dropbarOperator" },
+            TypeParameter = { icon = "󰊄", hl = "dropbarTypeParameter" },
+          },
+        },
+        bar = {
+          -- Enable breadcrumbs in winbar
+          enable = function(buf)
+            return vim.api.nvim_buf_get_option(buf, "buftype") == ""
+          end,
+        },
+      },
     },
   },
 }

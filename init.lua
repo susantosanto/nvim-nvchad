@@ -217,3 +217,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 vim.lsp.handlers["textDocument/hover"] = function() end
 vim.lsp.handlers["textDocument/signatureHelp"] = function() end
 
+-- Disable lspsaga winbar since we're using dropbar.nvim for breadcrumbs
+vim.o.winbar = ""
+

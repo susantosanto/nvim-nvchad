@@ -15,7 +15,7 @@ Whether you're building React applications, developing Node.js services, working
 ## 🚀 Key Features
 
 ### 🔧 Development Excellence
-- **AI-Powered Coding Assistant**: Supermaven AI for intelligent code suggestions
+
 - **Multi-Cursor Editing**: VS Code-style multi-cursor operations with visual-multi
 - **Advanced LSP Integration**: Intelligent code completion, diagnostics, and refactoring
 - **Real-time Collaboration**: Shared editing sessions with team members
@@ -39,7 +39,7 @@ Whether you're building React applications, developing Node.js services, working
 ## 📦 Installed Plugins
 
 ### 💡 Artificial Intelligence & Assistance
-- **Supermaven AI** - Real-time AI code completion and suggestions
+
 - **FkNotes** - Personal note-taking system with Obsidian integration
 - **Nvim-Gemini-Companion** - Qwen AI models integration for code assistance
 - **Opencode.nvim** - Collaborative code sharing and review platform
@@ -116,7 +116,7 @@ Whether you're building React applications, developing Node.js services, working
 | `Alt+k` | Add Cursor Above | Add cursor to line above |
 | `Alt+x` | Skip Selection | Skip current multi-cursor selection |
 | `Alt+p` | Remove Last | Remove last multi-cursor selection |
-| `Alt+l` | Accept AI Suggestion | Accept Supermaven AI completion |
+
 | `Alt+c` | Clear AI Suggestion | Clear current AI suggestion |
 | `Alt+w` | Accept AI Word | Accept single word from AI suggestion |
 
@@ -469,7 +469,7 @@ nvim --startuptime startup.log -c ":quit"
 ## 🔄 Recent Enhancements
 
 ### AI Integration
-- **Supermaven AI** integration for real-time code suggestions
+
 - **Conflict-free keymaps** ensuring smooth operation
 - **Customizable AI suggestions** with dedicated shortcuts
 
