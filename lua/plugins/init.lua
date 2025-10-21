@@ -552,6 +552,25 @@ return {
         })
       end,
     },
+    -- Visual-Multi: Multi cursor seperti di VS Code
+    {
+      "mg979/vim-visual-multi",
+      event = "VeryLazy",
+      init = function()
+        -- Konfigurasi VM
+        vim.g.VM_mouse_mappings = 1
+        vim.g.VM_default_mappings = 1
+        vim.g.VM_leader = '\\'
+        vim.g.VM_maps = {
+          ['Find Under']         = '<M-d>',          -- Alt+d (tidak bentrok)
+          ['Find Subword Under'] = '<M-d>',          -- Alt+d (tidak bentrok)
+          ['Select Cursor Down'] = '<M-j>',       -- Alt+j (tidak bentrok)
+          ['Select Cursor Up']   = '<M-k>',        -- Alt+k (tidak bentrok)
+          ['Skip Region']        = '<M-x>',          -- Alt+x (tidak bentrok)
+          ['Remove Region']      = '<M-p>',          -- Alt+p (tidak bentrok)
+        }
+      end,
+    },
     -- EFM Langserver for generic LSP support (eslint, etc.)
     {
       "neovim/nvim-lspconfig",
