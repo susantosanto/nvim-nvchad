@@ -537,6 +537,21 @@ return {
         })
       end,
     },
+    -- Supermaven AI Code Completion
+    {
+      "supermaven-inc/supermaven-nvim",
+      event = "VeryLazy",
+      config = function()
+        require("supermaven-nvim").setup({
+          keymaps = {
+            accept_suggestion = "<M-l>",  -- Alt+l untuk accept suggestion
+            clear_suggestion = "<M-c>",  -- Alt+c untuk clear suggestion
+            accept_word = "<M-w>",       -- Alt+w untuk accept word
+          },
+          ignore_filetypes = { "TelescopePrompt", "NvimTree", "neo-tree" },
+        })
+      end,
+    },
     -- EFM Langserver for generic LSP support (eslint, etc.)
     {
       "neovim/nvim-lspconfig",

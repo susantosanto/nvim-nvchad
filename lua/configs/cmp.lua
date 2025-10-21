@@ -58,6 +58,7 @@ cmp.setup({
   },
   sources = {
     { name = 'nvim_lsp' }, -- Dari LSP server (penting untuk import otomatis)
+    { name = 'supermaven' }, -- Supermaven AI completion
     { name = 'luasnip' }, -- Snippets
     { name = 'buffer' }, -- Dari buffer saat ini
     { name = 'path' }, -- Path completion
