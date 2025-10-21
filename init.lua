@@ -200,3 +200,20 @@ vim.api.nvim_set_hl(0, 'DashboardCenterText', { fg = '#a9b1d6' })
 vim.api.nvim_set_hl(0, 'DashboardCenterKey', { fg = '#7dcfff', bold = true })
 
 vim.opt.signcolumn = "yes"
+
+-- Disable all automatic hover and signature help globally to prevent mode switching
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client then
+      -- Disable hover and signature help providers to prevent automatic popups
+      client.server_capabilities.hoverProvider = false
+      client.server_capabilities.signatureHelpProvider = false
+    end
+  end,
+})
+
+-- Disable built-in LSP hover functionality entirely
+vim.lsp.handlers["textDocument/hover"] = function() end
+vim.lsp.handlers["textDocument/signatureHelp"] = function() end
+

@@ -7,6 +7,10 @@ local capabilities = nvchad_lsp.capabilities
 local on_attach_with_keymaps = function(client, bufnr)
   on_attach(client, bufnr)
 
+  -- Disable automatic hover and signature help to prevent mode switching
+  client.server_capabilities.hoverProvider = false
+  client.server_capabilities.signatureHelpProvider = false
+
   -- Don't set up keymaps if server doesn't support them
   if client.server_capabilities.documentFormattingProvider then
     vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>fm", "<cmd>lua vim.lsp.buf.format { async = true }<CR>", {

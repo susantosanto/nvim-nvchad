@@ -62,30 +62,51 @@ return {
       })
     end,
   },
-  -- LSP Saga
-  {
-    "nvimdev/lspsaga.nvim",
-    event = "LspAttach",
-    dependencies = {
-      { "nvim-treesitter/nvim-treesitter" },
-      { "nvim-tree/nvim-web-devicons" },
-    },
-    config = function()
-      require("lspsaga").setup({
-        symbol_in_winbar = {
-          enable = true,
-          separator = " › ",
-          hide_keyword = true,
-          show_file = true,
-          folder_level = 2,
-          color_mode = true,
-        },
-        lightbulb = {
-          enable = false,
-        },
-      })
-    end,
-  },
+  -- LSP Saga (disabled to prevent hover conflicts)
+  -- {
+  --   "nvimdev/lspsaga.nvim",
+  --   event = "LspAttach",
+  --   dependencies = {
+  --     { "nvim-treesitter/nvim-treesitter" },
+  --     { "nvim-tree/nvim-web-devicons" },
+  --   },
+  --   config = function()
+  --     require("lspsaga").setup({
+  --       symbol_in_winbar = {
+  --         enable = true,
+  --         separator = " › ",
+  --         hide_keyword = true,
+  --         show_file = true,
+  --         folder_level = 2,
+  --         color_mode = true,
+  --       },
+  --       lightbulb = {
+  --         enable = false,
+  --       },
+  --       hover = {
+  --         enable = false, -- Nonaktifkan hover otomatis yang menyebabkan mode switching
+  --       },
+  --       signature_help = {
+  --         enable = false, -- Nonaktifkan signature help otomatis
+  --         show_active_signature = false,
+  --       },
+  --       definition = {
+  --         enable = false, -- Nonaktifkan definition preview otomatis
+  --       },
+  --       rename = {
+  --         enable = true,
+  --         in_select = false,
+  --       },
+  --       diagnostic = {
+  --         enable = true,
+  --         show_code_action = true,
+  --         show_source = true,
+  --         border = true,
+  --         max_width = 60,
+  --       },
+  --     })
+  --   end,
+  -- },
   -- Smear cursor
   {
     "sphamba/smear-cursor.nvim",
@@ -1033,6 +1054,12 @@ return {
             ["vim.lsp.util.stylize_markdown"] = true,
             ["cmp.entry.get_documentation"] = true,
           },
+          hover = {
+            enable = false, -- Nonaktifkan hover documentation otomatis
+          },
+          signature = {
+            enable = false, -- Nonaktifkan signature help otomatis
+          },
         },
         presets = {
           bottom_search = true,
@@ -1040,6 +1067,16 @@ return {
           long_message_to_split = true,
           inc_rename = false,
           lsp_doc_border = false,
+        },
+        routes = {
+          {
+            filter = {
+              event = "msg_show",
+              kind = "",
+              find = "written",
+            },
+            opts = { skip = true },
+          },
         },
       },
     },

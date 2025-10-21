@@ -162,17 +162,35 @@ map("n", "h", function()
   require("nvim-tree.api").node.navigate.parent_close()
 end, { buffer = true, desc = "Close folder in NvimTree", nowait = true })
 
--- Keymap untuk close split and buffer
-map("n", "<leader>bk", function()
-  local winnr = vim.api.nvim_get_current_win()
-  local bufnr = vim.api.nvim_get_current_buf()
-  if vim.api.nvim_buf_is_valid(bufnr) then
-    vim.api.nvim_buf_delete(bufnr, { force = true })
+-- Keymaps untuk LSP functionality yang dinonaktifkan secara otomatis
+map("n", "K", "", { desc = "LSP Documentation" })
+map("n", "K", function()
+  -- Hanya aktifkan jika LSP tersedia
+  local clients = vim.lsp.get_clients()
+  if #clients > 0 then
+    vim.lsp.buf.hover()
+  else
+    -- Fall back to normal K behavior if no LSP
+    vim.cmd("normal! " .. vim.v.count .. "k")
   end
-  if #vim.api.nvim_list_wins() > 1 and vim.api.nvim_win_is_valid(winnr) then
-    vim.api.nvim_win_close(winnr, true)
+end, { desc = "Show documentation (when LSP available)", noremap = true, silent = true })
+
+map("n", "<leader>k", function()
+  local clients = vim.lsp.get_clients()
+  if #clients > 0 then
+    vim.lsp.buf.signature_help()
   end
-end, { desc = "Close split and buffer" })
+end, { desc = "Show signature help", noremap = true, silent = true })
+
+map("n", "gd", function()
+  local clients = vim.lsp.get_clients()
+  if #clients > 0 then
+    vim.lsp.buf.definition()
+  else
+    -- Fallback ke normal gd behavior
+    vim.cmd("normal! " .. vim.v.count .. "gd")
+  end
+end, { desc = "Go to definition", noremap = true, silent = true })
 
 -- Keymap untuk quit Neovim
 map("n", "<leader>q", ":qa<CR>", { desc = "Quit Neovim", noremap = true, silent = true })
@@ -668,3 +686,44 @@ end
 
 -- Keymap to rename HTML/XML tags
 map("n", "<leader>rt", rename_html_tag, { desc = "Rename HTML/XML tag and its pair" })
+
+-- Keymaps untuk LSP functionality yang dinonaktifkan secara otomatis
+map("n", "K", function()
+  -- Hanya aktifkan jika LSP tersedia
+  local clients = vim.lsp.get_clients()
+  if #clients > 0 then
+    vim.lsp.buf.hover()
+  else
+    -- Fall back to normal K behavior if no LSP
+    vim.cmd("normal! " .. vim.v.count .. "k")
+  end
+end, { desc = "Show documentation (when LSP available)", noremap = true, silent = true })
+
+map("n", "<leader>k", function()
+  local clients = vim.lsp.get_clients()
+  if #clients > 0 then
+    vim.lsp.buf.signature_help()
+  end
+end, { desc = "Show signature help", noremap = true, silent = true })
+
+map("n", "gd", function()
+  local clients = vim.lsp.get_clients()
+  if #clients > 0 then
+    vim.lsp.buf.definition()
+  else
+    -- Fallback ke normal gd behavior
+    vim.cmd("normal! " .. vim.v.count .. "gd")
+  end
+end, { desc = "Go to definition", noremap = true, silent = true })
+
+-- Keymap untuk close split and buffer
+map("n", "<leader>bk", function()
+  local winnr = vim.api.nvim_get_current_win()
+  local bufnr = vim.api.nvim_get_current_buf()
+  if vim.api.nvim_buf_is_valid(bufnr) then
+    vim.api.nvim_buf_delete(bufnr, { force = true })
+  end
+  if #vim.api.nvim_list_wins() > 1 and vim.api.nvim_win_is_valid(winnr) then
+    vim.api.nvim_win_close(winnr, true)
+  end
+end, { desc = "Close split and buffer" })
