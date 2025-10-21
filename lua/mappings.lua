@@ -282,9 +282,24 @@ map("n", "<leader>x", function()
 end, { desc = "Close buffer" })
 
 -- Close Buffers (close-buffers.nvim)
-map("n", "<leader>ch", "<cmd>lua require('close_buffers').delete({type = 'hidden'})<CR>", { desc = "Close hidden buffers" })
-map("n", "<leader>cu", "<cmd>lua require('close_buffers').delete({type = 'nameless'})<CR>", { desc = "Close nameless buffers" })
-map("n", "<leader>cb", "<cmd>lua require('close_buffers').delete({type = 'this'})<CR>", { desc = "Close current buffer (preserve layout)" })
+map(
+  "n",
+  "<leader>ch",
+  "<cmd>lua require('close_buffers').delete({type = 'hidden'})<CR>",
+  { desc = "Close hidden buffers" }
+)
+map(
+  "n",
+  "<leader>cu",
+  "<cmd>lua require('close_buffers').delete({type = 'nameless'})<CR>",
+  { desc = "Close nameless buffers" }
+)
+map(
+  "n",
+  "<leader>cb",
+  "<cmd>lua require('close_buffers').delete({type = 'this'})<CR>",
+  { desc = "Close current buffer (preserve layout)" }
+)
 
 -- Plugin Manager (Lazy) keymap
 map("n", "<leader>lp", "<cmd>Lazy<CR>", { desc = "Lazy Plugin Manager" })
@@ -539,7 +554,7 @@ map("n", "<leader>tf", ":tabfirst<CR>", { desc = "Go to first tab" })
 map("n", "<leader>tl", ":tablast<CR>", { desc = "Go to last tab" })
 map("n", "<leader>tp", ":tabprevious<CR>", { desc = "Go to previous tab" })
 -- Mapping untuk pergi ke tab tertentu (1-9)
-for i = 1, 9 do
+for i = 1, 5 do
   map("n", "<leader>" .. i, ":" .. i .. "tabnext<CR>", { desc = "Go to tab " .. i })
 end
 
@@ -555,7 +570,9 @@ local function rename_html_tag()
   local function get_current_tag()
     local row, col = unpack(vim.api.nvim_win_get_cursor(0))
     local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1]
-    if not line then return nil, nil, nil end
+    if not line then
+      return nil, nil, nil
+    end
 
     -- Find tag under cursor
     local start_col, end_col = line:find("<[/]?%w+[^>]*>", col)
@@ -563,12 +580,12 @@ local function rename_html_tag()
       -- Try to find closing tag if cursor is after >
       start_col, end_col = line:find("</%w+[^>]*>", col)
     end
-    
+
     if start_col then
       local tag_content = line:sub(start_col, end_col)
       local is_closing = tag_content:match("^</")
       local tag_name = tag_content:match("<[/]?([^%s/>]+)")
-      
+
       if tag_name then
         return tag_name, start_col - 1, is_closing, row -- Return 0-indexed column
       end
@@ -580,7 +597,7 @@ local function rename_html_tag()
     local current_row, _ = unpack(vim.api.nvim_win_get_cursor(0))
     local total_lines = vim.api.nvim_buf_line_count(0)
     local search_backward = is_closing
-    
+
     if search_backward then
       -- Search backward for opening tag
       for row = start_row - 1, 1, -1 do
@@ -618,7 +635,7 @@ local function rename_html_tag()
 
   -- Get current cursor position
   local current_row, current_col = unpack(vim.api.nvim_win_get_cursor(0))
-  
+
   -- Replace current tag
   local current_line = vim.api.nvim_buf_get_lines(0, current_row - 1, current_row, false)[1]
   -- First replace opening tags with attributes
@@ -629,8 +646,8 @@ local function rename_html_tag()
   updated_line = updated_line:gsub("<" .. tag_name .. ">", "<" .. new_tag .. ">")
   -- Finally replace closing tags
   updated_line = updated_line:gsub("</" .. tag_name .. ">", "</" .. new_tag .. ">")
-  vim.api.nvim_buf_set_lines(0, current_row - 1, current_row, false, {updated_line})
-  
+  vim.api.nvim_buf_set_lines(0, current_row - 1, current_row, false, { updated_line })
+
   -- Find and replace matching tag
   local match_row, match_col = find_matching_tag(tag_name, is_closing, current_row, tag_col)
   if match_row then
@@ -643,7 +660,7 @@ local function rename_html_tag()
     updated_match_line = updated_match_line:gsub("<" .. tag_name .. ">", "<" .. new_tag .. ">")
     -- Finally replace closing tags
     updated_match_line = updated_match_line:gsub("</" .. tag_name .. ">", "</" .. new_tag .. ">")
-    vim.api.nvim_buf_set_lines(0, match_row - 1, match_row, false, {updated_match_line})
+    vim.api.nvim_buf_set_lines(0, match_row - 1, match_row, false, { updated_match_line })
   end
 
   vim.notify("Renamed tag '" .. tag_name .. "' to '" .. new_tag .. "'", vim.log.levels.INFO)
@@ -651,5 +668,3 @@ end
 
 -- Keymap to rename HTML/XML tags
 map("n", "<leader>rt", rename_html_tag, { desc = "Rename HTML/XML tag and its pair" })
-
-
