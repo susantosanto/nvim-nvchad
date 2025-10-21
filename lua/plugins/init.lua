@@ -298,25 +298,25 @@ return {
         "scss",
         "tsx",
         "typescript",
-        "graphql",
+        -- "graphql",
         "http",
         "dockerfile",
         "yaml",
         "toml",
-        "git_config",
-        "git_rebase",
-        "gitattributes",
-        "gitcommit",
-        "gitignore",
+        -- "git_config",
+        -- "git_rebase",
+        -- "gitattributes",
+        -- "gitcommit",
+        -- "gitignore",
         "php",
         "blade",
-        "python",
-        "rust",
-        "go",
+        -- "python",
+        -- "rust",
+        -- "go",
         "sql",
         "prisma",
-        "c",
-        "cpp",
+        -- "c",
+        -- "cpp",
         "make",
         "vim",
         "vimdoc",
@@ -393,24 +393,7 @@ return {
     "nvim-treesitter/nvim-treesitter-textobjects",
     enabled = false, -- Already configured as dependency above
   },
-  -- Neogen: Generate function/class documentation
-  {
-    "danymat/neogen",
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    opts = {
-      snippet_engine = "luasnip",
-    },
-    keys = {
-      {
-        "<leader>cd",
-        function()
-          require("neogen").generate()
-        end,
-        desc = "Generate annotation for current function/class",
-      },
-    },
-    config = true,
-  },
+
   -- Todo Comments: Highlight and search for todo comments
   {
     "folke/todo-comments.nvim",
@@ -567,14 +550,14 @@ return {
         -- Konfigurasi VM
         vim.g.VM_mouse_mappings = 1
         vim.g.VM_default_mappings = 1
-        vim.g.VM_leader = '\\'
+        vim.g.VM_leader = "\\"
         vim.g.VM_maps = {
-          ['Find Under']         = '<M-d>',          -- Alt+d (tidak bentrok)
-          ['Find Subword Under'] = '<M-d>',          -- Alt+d (tidak bentrok)
-          ['Select Cursor Down'] = '<M-j>',       -- Alt+j (tidak bentrok)
-          ['Select Cursor Up']   = '<M-k>',        -- Alt+k (tidak bentrok)
-          ['Skip Region']        = '<M-x>',          -- Alt+x (tidak bentrok)
-          ['Remove Region']      = '<M-p>',          -- Alt+p (tidak bentrok)
+          ["Find Under"] = "<M-d>", -- Alt+d (tidak bentrok)
+          ["Find Subword Under"] = "<M-d>", -- Alt+d (tidak bentrok)
+          ["Select Cursor Down"] = "<M-j>", -- Alt+j (tidak bentrok)
+          ["Select Cursor Up"] = "<M-k>", -- Alt+k (tidak bentrok)
+          ["Skip Region"] = "<M-x>", -- Alt+x (tidak bentrok)
+          ["Remove Region"] = "<M-p>", -- Alt+p (tidak bentrok)
         }
       end,
     },
@@ -586,7 +569,17 @@ return {
           efm = {
             cmd = { "efm-langserver" },
             init_options = { documentFormatting = true },
-            filetypes = { "lua", "python", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte", "php" },
+            filetypes = {
+              "lua",
+              "python",
+              "javascript",
+              "typescript",
+              "javascriptreact",
+              "typescriptreact",
+              "vue",
+              "svelte",
+              "php",
+            },
           },
         },
         setup = {
@@ -618,7 +611,7 @@ return {
           Enum = "",
           Keyword = "󰌋",
           Snippet = "󰩫",
-          Color = "󰏘",
+          -- Color = "󰏘",
           File = "󰈙",
           Reference = "󰈥",
           Folder = "󰉋",
@@ -1098,28 +1091,7 @@ return {
       priority = 1000,
       config = true,
     },
-    -- Trouble
-    {
-      "folke/trouble.nvim",
-      opts = {
-        auto_preview = false,
-        auto_fold = false,
-        auto_jump = { "lsp_definitions" },
-        signs = {
-          error = "",
-          warning = "",
-          hint = "󰌵",
-          information = "",
-          other = "",
-        },
-      },
-      cmd = { "TroubleToggle", "Trouble" },
-      keys = {
-        { "<leader>xx", "<cmd>TroubleToggle<CR>", desc = "Diagnostics (Trouble)" },
-        { "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<CR>", desc = "Workspace Diagnostics (Trouble)" },
-        { "<leader>xd", "<cmd>TroubleToggle document_diagnostics<CR>", desc = "Document Diagnostics (Trouble)" },
-      },
-    },
+
     -- Tiny Inline Diagnostic
     {
       "rachartier/tiny-inline-diagnostic.nvim",
@@ -1241,24 +1213,7 @@ return {
         })
       end,
     },
-    -- Neodim: Dim unused variables and functions
-    {
-      "zbirenbaum/neodim",
-      event = "LspAttach",
-      opts = {
-        alpha = 0.4, -- Level of dimming (0-1), more visible
-        blend_color = "#000000", -- Color used for dimming
-        hide = {
-          virtual_text = true, -- Hide virtual text to avoid conflict with tiny-inline-diagnostic
-          signs = false, -- Keep signs visible
-          underline = false, -- Show underline for better visibility
-        },
-        priority = 1000, -- High priority to ensure it runs
-      },
-      config = function(_, opts)
-        require("neodim").setup(opts)
-      end,
-    },
+
     -- Indent blankline: Show indentation guides (minimized)
     {
       "lukas-reineke/indent-blankline.nvim",
