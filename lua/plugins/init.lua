@@ -328,6 +328,66 @@ return {
       highlight = {
         enable = true,
         additional_vim_regex_highlighting = false,
+        -- Disable highlighting for certain file types to prevent errors
+        disable = function(lang, buf)
+          local disable_filetypes = {
+            "dashboard", "TelescopePrompt", "TelescopeResults", "lazy", "mason", 
+            "help", "startify", "nvcheatsheet", "lspinfo", "null-ls-info",
+            "toggleterm", "terminal", "alpha", "NvimTree", "neo-tree", "undotree",
+            "gitsigns", "which-key", "noice", "notify", ""
+          }
+          
+          local current_ft = vim.api.nvim_buf_get_option(buf, "filetype")
+          local current_bt = vim.api.nvim_buf_get_option(buf, "buftype")
+          
+          -- Disable if buftype is special (like terminal, prompt, etc.)
+          if current_bt ~= "" and current_bt ~= "acwrite" then
+            return true
+          end
+          
+          for _, ft in ipairs(disable_filetypes) do
+            if current_ft == ft then
+              return true
+            end
+          end
+          
+          -- Also disable for very large files to prevent performance issues
+          local max_filesize = 100 * 1024 -- 100 KB
+          local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
+          if ok and stats and stats.size > max_filesize then
+            return true
+          end
+          
+          return false
+        end,
+      },
+      indent = {
+        enable = true,
+        -- Disable indentation for certain file types to prevent errors
+        disable = function(lang, buf)
+          local disable_filetypes = {
+            "dashboard", "TelescopePrompt", "TelescopeResults", "lazy", "mason", 
+            "help", "startify", "nvcheatsheet", "lspinfo", "null-ls-info",
+            "toggleterm", "terminal", "alpha", "NvimTree", "neo-tree", "undotree",
+            "gitsigns", "which-key", "noice", "notify", ""
+          }
+          
+          local current_ft = vim.api.nvim_buf_get_option(buf, "filetype")
+          local current_bt = vim.api.nvim_buf_get_option(buf, "buftype")
+          
+          -- Disable if buftype is special
+          if current_bt ~= "" and current_bt ~= "acwrite" then
+            return true
+          end
+          
+          for _, ft in ipairs(disable_filetypes) do
+            if current_ft == ft then
+              return true
+            end
+          end
+          
+          return false
+        end,
       },
       textobjects = {
         select = {

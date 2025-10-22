@@ -57,7 +57,7 @@
   "prisma.nvim": { "branch": "master", "commit": "50cd823cb496d5a515073ae679a6202eb045531c" },
   "promise-async": { "branch": "main", "commit": "119e8961014c9bfaf1487bf3c2a393d254f337e2" },
   "smear-cursor.nvim": { "branch": "main", "commit": "abfa5835920b1d76c0e24e1465a618ad914be90a" },
-  "snacks.nvim": { "branch": "main", "commit": "d293b21fe1a603dfb4757feb82ab3e67b78589f2" },
+  "snacks.nvim": { "branch": "main", "commit": "0760abd2936550e5c9ec9fb0eb18d68a5ef178bb" },
   "store.nvim": { "branch": "main", "commit": "df430716b095719f7221f2fb50be696879ca7c34" },
   "tailwind-autosort.nvim": { "branch": "main", "commit": "99dde9415a2548ce685b317b1d3c4b1fcaba14a6" },
   "tailwind-tools.nvim": { "branch": "master", "commit": "fbe982901d4508b0dcd80e07addf0fcb6dab6c49" },
