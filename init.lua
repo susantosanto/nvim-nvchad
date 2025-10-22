@@ -139,6 +139,7 @@ vim.schedule(function()
   require("mappings")
 end)
 
+
 -- Ensure todo-comments is initialized with correct configuration early
 if pcall(require, "todo-comments") then
   -- Apply our todo-comments configuration to make sure it's properly initialized
@@ -170,16 +171,16 @@ if pcall(require, "todo-comments") then
       before = "fg",
       keyword = "wide",
       after = "fg",
-      pattern = [[.*<(KEYWORDS)\s*:]],
+      pattern = [[.*<(KEYWORDS)\s*:]], -- pattern or table of patterns, used for highlighting (vim regex)
       comments_only = true,
       max_line_len = 400,
       exclude = {},
     },
     colors = {
-      error = { "DiagnosticError", "ErrorMsg", "#E74C3C" },
-      warning = { "DiagnosticWarn", "WarningMsg", "#F39C12" },
-      info = { "DiagnosticInfo", "#3498DB" },
-      hint = { "DiagnosticHint", "#1ABC9C" },
+      error = { "DiagnosticError", "ErrorMsg", "#C72E0F" }, -- Merah yang lebih gelap untuk kontras lebih baik
+      warning = { "DiagnosticWarn", "WarningMsg", "#D9A20F" }, -- Oranye yang lebih kontras
+      info = { "DiagnosticInfo", "#1E66F5" }, -- Biru yang lebih gelap, lebih kontras
+      hint = { "DiagnosticHint", "#0F9D58" }, -- Hijau yang lebih kontras
       default = { "Identifier", "#9B59B6" },
       test = { "Identifier", "#8E44AD" },
     },
@@ -219,4 +220,29 @@ vim.lsp.handlers["textDocument/signatureHelp"] = function() end
 
 -- Disable lspsaga winbar since we're using dropbar.nvim for breadcrumbs
 vim.o.winbar = ""
+
+-- Initialize undotree and create commands manually
+local undotree_ok, undotree = pcall(require, "undotree")
+if undotree_ok then
+  undotree.setup({})
+
+  -- Define the commands manually since the plugin doesn't do it automatically
+  vim.api.nvim_create_user_command("UndotreeToggle", function()
+    require("undotree").toggle()
+  end, { desc = "Toggle undotree" })
+
+  vim.api.nvim_create_user_command("UndotreeShow", function()
+    require("undotree").open()
+  end, { desc = "Show undotree" })
+
+  vim.api.nvim_create_user_command("UndotreeHide", function()
+    require("undotree").close()
+  end, { desc = "Hide undotree" })
+
+  vim.api.nvim_create_user_command("UndotreeFocus", function()
+    -- Focus undotree implementation would go here if needed
+  end, { desc = "Focus undotree" })
+end
+
+
 

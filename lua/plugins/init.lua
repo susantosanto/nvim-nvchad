@@ -470,7 +470,7 @@ return {
         end,
         desc = "Previous todo comment",
       },
-      { "<leader>ft", "<cmd>TodoTelescope<cr>", desc = "Find todo comments" },
+      { "<leader>fd", "<cmd>TodoTelescope<cr>", desc = "Find todo comments" },
     },
     -- Typescript: Enhanced TypeScript/JavaScript support
     {
@@ -815,19 +815,7 @@ return {
       "stevearc/dressing.nvim",
       config = true,
     },
-    -- Barbar
-    {
-      "romgrk/barbar.nvim",
-      dependencies = {
-        "lewis6991/gitsigns.nvim",
-        "nvim-tree/nvim-web-devicons",
-      },
-      init = function()
-        vim.g.barbar_auto_setup = false
-      end,
-      opts = {},
-      version = "^1.0.0",
-    },
+
     -- Bufferline
     {
       "akinsho/bufferline.nvim",
@@ -1293,6 +1281,17 @@ return {
         require("telescope").load_extension("media_files")
       end,
     },
+    -- Undotree: Visualize undo history
+    {
+      "jiaoshijie/undotree",
+      priority = 1000, -- Load very early
+      config = function()
+        require("undotree").setup({})
+      end,
+      keys = {
+        { "<leader>U", "<cmd>UndotreeToggle<CR>", desc = "Toggle Undotree" },
+      },
+    },
     -- Dropbar.nvim - Breadcrumbs like VS Code/ JetBrains
     {
       "Bekaboo/dropbar.nvim",
@@ -1337,6 +1336,51 @@ return {
           end,
         },
       },
+    },
+    -- Nvim-biscuits: Show context at the end of long lines
+    {
+      "code-biscuits/nvim-biscuits",
+      dependencies = {
+        "nvim-treesitter/nvim-treesitter",
+      },
+      opts = {
+        -- Konfigurasi global default
+        default_config = {
+          max_length = 12, -- Panjang maksimum sebelum ditampilkan
+          min_distance = 5, -- Jarak minimum sebelum ditampilkan
+          prefix_string = " 📎 ", -- Awalan default untuk teks yang dipersingkat
+        },
+        -- Konfigurasi spesifik bahasa
+        language_config = {
+          javascript = {
+            prefix_string = " ⚡ ", -- Ikon khusus untuk javascript
+            max_length = 80,
+          },
+          typescript = {
+            prefix_string = " 🔷 ", -- Ikon khusus untuk typescript
+            max_length = 80,
+          },
+          python = {
+            disabled = false, -- Aktifkan untuk python
+            prefix_string = " 🐍 ", -- Ikon untuk python
+          },
+          lua = {
+            prefix_string = " 🌙 ", -- Ikon untuk lua
+          },
+          html = {
+            prefix_string = " 🌐 ", -- Ikon untuk html
+          },
+          css = {
+            prefix_string = " 🎨 ", -- Ikon untuk css
+          },
+          vue = {
+            prefix_string = " ▿ ", -- Ikon untuk vue
+          },
+        },
+        -- Update hanya saat meninggalkan mode insert atau kursor ditahan lama
+        update_events = { "InsertLeave", "CursorHoldI" },
+      },
+      event = { "BufReadPost", "BufNewFile" },
     },
   },
 }
