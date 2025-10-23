@@ -3,142 +3,108 @@ local nvchad_lsp = require("nvchad.configs.lspconfig")
 local on_attach = nvchad_lsp.on_attach
 local capabilities = nvchad_lsp.capabilities
 
--- Additional on_attach function to add keymaps
+-- Additional on_attach function optimized for performance
 local on_attach_with_keymaps = function(client, bufnr)
+  -- Apply basic on_attach from NvChad
   on_attach(client, bufnr)
 
-  -- Disable automatic hover and signature help to prevent mode switching
-  client.server_capabilities.hoverProvider = false
-  client.server_capabilities.signatureHelpProvider = false
+  -- Optimize client capabilities to reduce load
+  client.server_capabilities.hoverProvider = false  -- Disable hover to prevent performance hit
+  client.server_capabilities.signatureHelpProvider = false  -- Disable signature help
+  client.server_capabilities.documentFormattingProvider = false  -- Use conform.nvim instead
+  client.server_capabilities.documentRangeFormattingProvider = false  -- Use conform.nvim instead
 
-  -- Don't set up keymaps if server doesn't support them
-  if client.server_capabilities.documentFormattingProvider then
-    vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>fm", "<cmd>lua vim.lsp.buf.format { async = true }<CR>", {
-      desc = "Format file",
-      noremap = true,
-      silent = true,
-    })
-  end
+  -- Add only essential keymaps
+  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 end
 
--- Define servers to configure for fullstack development
--- Will handle JS/TS diagnostics primarily via lint.nvim to prevent duplication
+-- Define only essential servers for web development
 local servers = {
   "html",
-  "cssls",
+  "cssls", 
   "jsonls",
-  "bashls",
-  "denols", -- Deno
-  "emmet_ls", -- HTML/CSS emmet
-  "tailwindcss", -- Tailwind CSS
-  "lua_ls", -- Lua (for Neovim config)
-  "dockerls", -- Docker
-  "yamlls", -- YAML files
-  "ts_ls", -- TypeScript/JavaScript
-  "intelephense", -- PHP for Laravel
+  "lua_ls", -- For Neovim config
+  "ts_ls", -- TypeScript/JavaScript (most important for React)
 }
 
--- Add specific JavaScript/TypeScript server that doesn't conflict with ESLint
--- We'll only add ts_ls without diagnostic capabilities when using lint.nvim
+-- Configure mason-lspconfig with performance optimizations
 local mason_lspconfig_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
 if mason_lspconfig_ok then
-  -- Use the new approach with handlers
   mason_lspconfig.setup({
     ensure_installed = servers,
     handlers = {
-      -- Default handler for all servers
+      -- Default handler with performance optimizations
       function(server_name)
         local lspconfig = require("lspconfig")
         local opts = {
           on_attach = on_attach_with_keymaps,
           capabilities = capabilities,
+          -- Optimize update frequency to reduce load
+          flags = {
+            debounce_text_changes = 150, -- Reduce frequency of LSP updates
+          },
         }
 
-        if server_name == "denols" then
-          opts.root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc", ".git")
-          opts.single_file_support = false
-        elseif server_name == "emmet_ls" then
-          opts.filetypes = {
-            "html",
-            "css",
-            "javascript",
-            "typescript",
-            "javascriptreact",
-            "typescriptreact",
-            "svelte",
-            "vue",
-            "astro",
-            "blade",
+        if server_name == "ts_ls" then
+          -- Optimize ts_ls specifically for React projects
+          opts.root_dir = require("lspconfig").util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git")
+          opts.init_options = {
+            hostInfo = "neovim",
+            maxTsServerMemory = 2048, -- Limit memory usage for large projects
           }
-        elseif server_name == "tailwindcss" then
-          opts.root_dir = lspconfig.util.root_pattern(
-            "tailwind.config.js",
-            "tailwind.config.ts",
-            "postcss.config.js",
-            "postcss.config.ts",
-            "package.json",
-            ".git"
-          )
-          opts.settings = {
-            tailwindCSS = {
-              includeLanguages = {
-                javascript = "javascript",
-                typescript = "typescript",
-                "javascriptreact",
-                "typescriptreact",
-                svelte = "html",
-                vue = "vue",
-                astro = "astro",
-                php = "html", -- For Laravel blade files (as a workaround)
-              },
-            },
-          }
-        elseif server_name == "ts_ls" then
-          opts.root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git")
           opts.settings = {
             typescript = {
               inlayHints = {
-                includeInlayParameterNameHints = "all",
+                includeInlayParameterNameHints = "none", -- Disable inlay hints to improve performance
                 includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayVariableTypeHints = true,
-                includeInlayPropertyDeclarationTypeHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayEnumMemberValueHints = true,
+                includeInlayFunctionParameterTypeHints = false,
+                includeInlayVariableTypeHints = false,
+                includeInlayPropertyDeclarationTypeHints = false,
+                includeInlayFunctionLikeReturnTypeHints = false,
+                includeInlayEnumMemberValueHints = false,
               },
+              -- Optimize performance in large projects
+              preferences = {
+                includePackageJsonAutoImports = "auto",
+                -- Exclude node_modules from type checking
+                excludeLibrarySymbolsInNavToReferences = true,
+                excludeLibrarySymbolsInNavToAnywhere = true,
+              }
             },
             javascript = {
               inlayHints = {
-                includeInlayParameterNameHints = "all",
+                includeInlayParameterNameHints = "none", -- Disable inlay hints to improve performance
                 includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayVariableTypeHints = true,
-                includeInlayPropertyDeclarationTypeHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayEnumMemberValueHints = true,
+                includeInlayFunctionParameterTypeHints = false,
+                includeInlayVariableTypeHints = false,
+                includeInlayPropertyDeclarationTypeHints = false,
+                includeInlayFunctionLikeReturnTypeHints = false,
+                includeInlayEnumMemberValueHints = false,
               },
+              -- Optimize performance in large projects
+              preferences = {
+                includePackageJsonAutoImports = "auto",
+                -- Exclude node_modules from type checking
+                excludeLibrarySymbolsInNavToReferences = true,
+                excludeLibrarySymbolsInNavToAnywhere = true,
+              }
             },
           }
-        elseif server_name == "intelephense" then
-          opts.root_dir = lspconfig.util.root_pattern("composer.json", "index.php", ".git")
-        elseif server_name == "volar" then
-          opts.root_dir = lspconfig.util.root_pattern("package.json", "vue.config.js", ".git")
-          opts.filetypes = { "vue", "javascript", "typescript", "javascriptreact", "typescriptreact" }
+        elseif server_name == "html" then
+          opts.filetypes = { "html", "javascript", "typescript" }
+        elseif server_name == "cssls" then
+          opts.settings = {
+            css = {
+              validate = false, -- Disable validation to improve performance
+            },
+            scss = {
+              validate = false, -- Disable validation to improve performance
+            }
+          }
         end
 
         lspconfig[server_name].setup(opts)
       end,
     },
   })
-else
-  -- Fallback for older configuration if mason-lspconfig fails
-  local lspconfig = require("lspconfig")
-  for _, server in ipairs(servers) do
-    local opts = {
-      on_attach = on_attach_with_keymaps,
-      capabilities = capabilities,
-    }
-
-    lspconfig[server].setup(opts)
-  end
 end
