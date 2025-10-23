@@ -375,9 +375,17 @@ return {
           if ok and stats and stats.size > max_filesize then
             return true
           end
+          
+          -- Additional optimization: disable for node_modules directories
+          local bufname = vim.api.nvim_buf_get_name(buf)
+          if bufname:match("/node_modules/") then
+            return true
+          end
 
           return false
         end,
+        -- Improve performance and stability by limiting highlight updates
+        update_in_insert = false,
       },
       indent = {
         enable = true,
@@ -419,6 +427,12 @@ return {
             if current_ft == ft then
               return true
             end
+          end
+          
+          -- Disable indentation for node_modules directories
+          local bufname = vim.api.nvim_buf_get_name(buf)
+          if bufname:match("/node_modules/") then
+            return true
           end
 
           return false
