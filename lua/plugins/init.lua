@@ -258,9 +258,10 @@ return {
         python = { "flake8" },
         php = { "phpcs" },
       }
-      -- Auto-run linter on file changes
-      vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter" }, {
+      -- Auto-run linter on file changes, but optimize for performance
+      vim.api.nvim_create_autocmd({ "BufWritePost" }, {
         callback = function()
+          -- Only run linting on file save, not on BufEnter which can cause performance issues
           lint.try_lint()
         end,
       })
@@ -269,7 +270,7 @@ return {
   -- Formatters for web development
   {
     "stevearc/conform.nvim",
-    event = { "BufReadPre", "BufNewFile" },
+    event = "BufReadPre",
     config = function()
       require("configs.conform_custom").setup()
     end,
@@ -331,33 +332,50 @@ return {
         -- Disable highlighting for certain file types to prevent errors
         disable = function(lang, buf)
           local disable_filetypes = {
-            "dashboard", "TelescopePrompt", "TelescopeResults", "lazy", "mason", 
-            "help", "startify", "nvcheatsheet", "lspinfo", "null-ls-info",
-            "toggleterm", "terminal", "alpha", "NvimTree", "neo-tree", "undotree",
-            "gitsigns", "which-key", "noice", "notify", ""
+            "dashboard",
+            "TelescopePrompt",
+            "TelescopeResults",
+            "lazy",
+            "mason",
+            "help",
+            "startify",
+            "nvcheatsheet",
+            "lspinfo",
+            "null-ls-info",
+            "toggleterm",
+            "terminal",
+            "alpha",
+            "NvimTree",
+            "neo-tree",
+            "undotree",
+            "gitsigns",
+            "which-key",
+            "noice",
+            "notify",
+            "",
           }
-          
+
           local current_ft = vim.api.nvim_buf_get_option(buf, "filetype")
           local current_bt = vim.api.nvim_buf_get_option(buf, "buftype")
-          
+
           -- Disable if buftype is special (like terminal, prompt, etc.)
           if current_bt ~= "" and current_bt ~= "acwrite" then
             return true
           end
-          
+
           for _, ft in ipairs(disable_filetypes) do
             if current_ft == ft then
               return true
             end
           end
-          
+
           -- Also disable for very large files to prevent performance issues
           local max_filesize = 100 * 1024 -- 100 KB
           local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
           if ok and stats and stats.size > max_filesize then
             return true
           end
-          
+
           return false
         end,
       },
@@ -366,26 +384,43 @@ return {
         -- Disable indentation for certain file types to prevent errors
         disable = function(lang, buf)
           local disable_filetypes = {
-            "dashboard", "TelescopePrompt", "TelescopeResults", "lazy", "mason", 
-            "help", "startify", "nvcheatsheet", "lspinfo", "null-ls-info",
-            "toggleterm", "terminal", "alpha", "NvimTree", "neo-tree", "undotree",
-            "gitsigns", "which-key", "noice", "notify", ""
+            "dashboard",
+            "TelescopePrompt",
+            "TelescopeResults",
+            "lazy",
+            "mason",
+            "help",
+            "startify",
+            "nvcheatsheet",
+            "lspinfo",
+            "null-ls-info",
+            "toggleterm",
+            "terminal",
+            "alpha",
+            "NvimTree",
+            "neo-tree",
+            "undotree",
+            "gitsigns",
+            "which-key",
+            "noice",
+            "notify",
+            "",
           }
-          
+
           local current_ft = vim.api.nvim_buf_get_option(buf, "filetype")
           local current_bt = vim.api.nvim_buf_get_option(buf, "buftype")
-          
+
           -- Disable if buftype is special
           if current_bt ~= "" and current_bt ~= "acwrite" then
             return true
           end
-          
+
           for _, ft in ipairs(disable_filetypes) do
             if current_ft == ft then
               return true
             end
           end
-          
+
           return false
         end,
       },
@@ -1218,7 +1253,7 @@ return {
       "brianhuster/autosave.nvim",
       event = "VeryLazy",
       config = function()
-        vim.g.autosave_enabled = true
+        vim.g.autosave_enabled = false
         vim.g.autosave_disable_inside_paths = { vim.fn.stdpath("config") }
         -- Disable autowriteall to avoid conflicts with other plugins
         vim.o.autowriteall = false

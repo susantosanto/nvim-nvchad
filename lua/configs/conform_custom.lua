@@ -30,10 +30,13 @@ M.setup = function()
       prettier = {
         -- Prettier options to ensure semicolons are added
         prepend_args = { "--semi=true", "--trailing-comma=es5" },
+        -- Reduce timeout for better performance in large files
+        timeout_ms = 1000,
       },
       stylua = {
         -- Explicitly configure stylua options to avoid conflicts with .stylua.toml
         prepend_args = {},
+        timeout_ms = 500,
       },
     },
 
@@ -41,6 +44,8 @@ M.setup = function()
     format_on_save = {
       timeout_ms = 1000,
       lsp_fallback = true,
+      -- Only format on save, not during insert mode
+      async = false, -- Set to false for better reliability
     },
   })
 end

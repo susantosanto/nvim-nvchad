@@ -7,7 +7,6 @@ local actions = require "telescope.actions"
 
 telescope.setup {
   defaults = {
-
     prompt_prefix = " ",
     selection_caret = " ",
     path_display = { "smart" },
@@ -20,6 +19,14 @@ telescope.setup {
       "--line-number",
       "--column",
       "--smart-case",
+      "--hidden", -- Include hidden files
+      "--glob=!.git/*", -- Exclude git directory
+      "--glob=!node_modules/*", -- Exclude node_modules
+      "--glob=!dist/*", -- Exclude dist folders
+      "--glob=!build/*", -- Exclude build folders
+      "--glob=!coverage/*", -- Exclude coverage folders
+      "--glob=!*.min.js", -- Exclude minified JS files
+      "--glob=!*.min.css", -- Exclude minified CSS files
     },
 
     mappings = {
@@ -73,13 +80,22 @@ telescope.setup {
     },
   },
   pickers = {
-    -- Default configuration for builtin pickers goes here:
-    -- picker_name = {
-    --   picker_config_key = value,
-    --   ...
-    -- }
-    -- Now the picker_config_key will be applied every time you call this
-    -- builtin picker
+    find_files = {
+      -- Configure find_files to respect .gitignore and exclude heavy directories
+      find_command = { "rg", "--files", "--hidden", "--glob=!.git/*", "--glob=!node_modules/*" },
+    },
+    live_grep = {
+      -- Additional vimgrep_arguments to exclude common heavy directories
+      additional_args = function(opts)
+        return { "--hidden", "--glob=!.git/*", "--glob=!node_modules/*", "--glob=!dist/*", "--glob=!build/*" }
+      end
+    },
+    grep_string = {
+      -- Additional vimgrep_arguments to exclude common heavy directories
+      additional_args = function(opts)
+        return { "--hidden", "--glob=!.git/*", "--glob=!node_modules/*", "--glob=!dist/*", "--glob=!build/*" }
+      end
+    }
   },
   extensions = {
     -- Your extension configuration goes here:

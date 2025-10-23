@@ -63,31 +63,33 @@ vim.diagnostic.config({
 })
 
 -- Auto-format on save with safe Lua handling
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.php", "*.css", "*.scss", "*.html", "*.json", "*.yaml", "*.lua" },
-  callback = function()
-    local conform = require("conform")
-    -- Handle Lua files with special care to prevent syntax scrambling
-    if vim.bo.filetype == "lua" then
-      local ok, _ = pcall(function()
-        conform.format({
-          timeout_ms = 1000,
-          lsp_fallback = true,
-        })
-      end)
-      -- If formatting fails, silently continue without error
-      if not ok then
-        vim.notify("Lua formatting failed, file saved without formatting", vim.log.levels.WARN)
-      end
-    else
-      -- Format non-Lua files normally
-      conform.format({
-        timeout_ms = 1000,
-        lsp_fallback = true,
-      })
-    end
-  end,
-})
+-- Disable this autocmd since conform.nvim already handles format_on_save
+-- This prevents double formatting which causes lag
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--   pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.php", "*.css", "*.scss", "*.html", "*.json", "*.yaml", "*.lua" },
+--   callback = function()
+--     local conform = require("conform")
+--     -- Handle Lua files with special care to prevent syntax scrambling
+--     if vim.bo.filetype == "lua" then
+--       local ok, _ = pcall(function()
+--         conform.format({
+--           timeout_ms = 1000,
+--           lsp_fallback = true,
+--         })
+--       end)
+--       -- If formatting fails, silently continue without error
+--       if not ok then
+--         vim.notify("Lua formatting failed, file saved without formatting", vim.log.levels.WARN)
+--       end
+--     else
+--       -- Format non-Lua files normally
+--       conform.format({
+--         timeout_ms = 1000,
+--         lsp_fallback = true,
+--       })
+--     end
+--   end,
+-- })
 
 -- load plugins
 require("lazy").setup({
