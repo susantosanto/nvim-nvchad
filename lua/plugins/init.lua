@@ -285,43 +285,40 @@ return {
     },
     opts = {
       ensure_installed = {
-        "bash",
-        "css",
+        -- Core web languages
         "html",
-        "javascript",
+        "css",
+        "javascript",   -- Handles both JS and JSX
+        "typescript",   -- Handles both TS and TSX
+        "tsx",          -- TSX support (separate from typescript)
+        
+        -- React/Next.js specific
         "jsdoc",
         "json",
         "jsonc",
-        "lua",
-        "luadoc",
         "markdown",
         "markdown_inline",
         "scss",
-        "tsx",
-        "typescript",
-        -- "graphql",
-        "http",
-        "dockerfile",
         "yaml",
-        "toml",
-        -- "git_config",
-        -- "git_rebase",
-        -- "gitattributes",
-        -- "gitcommit",
-        -- "gitignore",
+        
+        -- Laravel specific
         "php",
-        "blade",
-        -- "python",
-        -- "rust",
-        -- "go",
-        "sql",
+        "blade",        -- Laravel Blade templates
+        "phpdoc",
+        
+        -- Prisma
         "prisma",
-        -- "c",
-        -- "cpp",
-        "make",
+        
+        -- Common for web dev
+        "graphql",      -- For API queries (often used with React/Next.js)
+        "http",         -- API request files
+        "dockerfile",   -- Containerization
+        "gitignore",
+        "toml",         -- Configuration files
+        "lua",          -- Your Neovim config
         "vim",
         "vimdoc",
-        "query",
+        "query",        -- Treesitter queries
         "regex",
         "comment",
       },
@@ -329,51 +326,36 @@ return {
       highlight = {
         enable = true,
         additional_vim_regex_highlighting = false,
-        -- Disable highlighting for certain file types to prevent errors
+        
+        -- Performance optimized disable function
         disable = function(lang, buf)
-          local disable_filetypes = {
-            "dashboard",
-            "TelescopePrompt",
-            "TelescopeResults",
-            "lazy",
-            "mason",
-            "help",
-            "startify",
-            "nvcheatsheet",
-            "lspinfo",
-            "null-ls-info",
-            "toggleterm",
-            "terminal",
-            "alpha",
-            "NvimTree",
-            "neo-tree",
-            "undotree",
-            "gitsigns",
-            "which-key",
-            "noice",
-            "notify",
-            "",
-          }
-
-          local current_ft = vim.api.nvim_buf_get_option(buf, "filetype")
-          local current_bt = vim.api.nvim_buf_get_option(buf, "buftype")
-
-          -- Disable if buftype is special (like terminal, prompt, etc.)
-          if current_bt ~= "" and current_bt ~= "acwrite" then
-            return true
-          end
-
-          for _, ft in ipairs(disable_filetypes) do
-            if current_ft == ft then
-              return true
-            end
-          end
-
-          -- Also disable for very large files to prevent performance issues
           local max_filesize = 100 * 1024 -- 100 KB
           local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
           if ok and stats and stats.size > max_filesize then
             return true
+          end
+          
+          -- Disable for specific filetypes that don't need treesitter highlighting
+          local disable_filetypes = {
+            "dashboard", "TelescopePrompt", "TelescopeResults", "lazy", 
+            "mason", "help", "startify", "nvcheatsheet", "lspinfo", 
+            "null-ls-info", "toggleterm", "terminal", "alpha", 
+            "NvimTree", "neo-tree", "undotree", "gitsigns", 
+            "which-key", "noice", "notify", ""
+          }
+          
+          local current_ft = vim.api.nvim_buf_get_option(buf, "filetype")
+          local current_bt = vim.api.nvim_buf_get_option(buf, "buftype")
+          
+          -- Disable if buftype is special (like terminal, prompt, etc.)
+          if current_bt ~= "" and current_bt ~= "acwrite" then
+            return true
+          end
+          
+          for _, ft in ipairs(disable_filetypes) do
+            if current_ft == ft then
+              return true
+            end
           end
           
           -- Additional optimization: disable for node_modules directories
@@ -381,63 +363,62 @@ return {
           if bufname:match("/node_modules/") then
             return true
           end
-
+          
           return false
         end,
-        -- Improve performance and stability by limiting highlight updates
+        
+        -- Performance optimization: don't update highlights during insert mode
         update_in_insert = false,
       },
       indent = {
         enable = true,
-        -- Disable indentation for certain file types to prevent errors
+        
+        -- Performance optimized disable function for indentation
         disable = function(lang, buf)
+          -- Same disable conditions as highlight
+          local max_filesize = 100 * 1024 -- 100 KB
+          local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
+          if ok and stats and stats.size > max_filesize then
+            return true
+          end
+          
           local disable_filetypes = {
-            "dashboard",
-            "TelescopePrompt",
-            "TelescopeResults",
-            "lazy",
-            "mason",
-            "help",
-            "startify",
-            "nvcheatsheet",
-            "lspinfo",
-            "null-ls-info",
-            "toggleterm",
-            "terminal",
-            "alpha",
-            "NvimTree",
-            "neo-tree",
-            "undotree",
-            "gitsigns",
-            "which-key",
-            "noice",
-            "notify",
-            "",
+            "dashboard", "TelescopePrompt", "TelescopeResults", "lazy", 
+            "mason", "help", "startify", "nvcheatsheet", "lspinfo", 
+            "null-ls-info", "toggleterm", "terminal", "alpha", 
+            "NvimTree", "neo-tree", "undotree", "gitsigns", 
+            "which-key", "noice", "notify", ""
           }
-
+          
           local current_ft = vim.api.nvim_buf_get_option(buf, "filetype")
           local current_bt = vim.api.nvim_buf_get_option(buf, "buftype")
-
+          
           -- Disable if buftype is special
           if current_bt ~= "" and current_bt ~= "acwrite" then
             return true
           end
-
+          
           for _, ft in ipairs(disable_filetypes) do
             if current_ft == ft then
               return true
             end
           end
           
-          -- Disable indentation for node_modules directories
-          local bufname = vim.api.nvim_buf_get_name(buf)
-          if bufname:match("/node_modules/") then
-            return true
-          end
-
           return false
         end,
       },
+      
+      -- Incremental selection for better editing experience
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "gnn",
+          node_incremental = "grn",
+          scope_incremental = "grc",
+          node_decremental = "grm",
+        },
+      },
+      
       textobjects = {
         select = {
           enable = true,
@@ -494,6 +475,12 @@ return {
             ["[]"] = "@class.outer",
           },
         },
+      },
+      
+      -- Context for better code visibility
+      context_commentstring = {
+        enable = true,
+        enable_autocmd = false,
       },
     },
   },
@@ -1230,7 +1217,21 @@ return {
       },
     },
 
-    -- Plugin: store.nvim
+    -- Supermaven AI integration
+  {
+    "supermaven-inc/supermaven-nvim",
+    event = "VeryLazy",
+    config = function()
+      require("supermaven-nvim").setup({
+        -- Disable Supermaven by default (user will manually enable when needed)
+        enabled = false,
+        log_level = "info",
+      })
+      -- Explicitly stop Supermaven after setup to ensure it's disabled by default
+      require("supermaven-nvim.api").stop()
+    end,
+  },
+  -- Plugin: store.nvim
     {
       "alex-popov-tech/store.nvim",
       lazy = true,

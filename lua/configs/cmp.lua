@@ -57,6 +57,7 @@ cmp.setup({
     }),
   },
   sources = {
+    { name = 'supermaven' }, -- Supermaven AI completions (will be enabled/disabled as needed)
     { name = 'nvim_lsp' }, -- Dari LSP server (penting untuk import otomatis)
     { name = 'luasnip' }, -- Snippets
     { name = 'buffer' }, -- Dari buffer saat ini

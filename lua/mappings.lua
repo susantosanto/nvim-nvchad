@@ -727,3 +727,24 @@ map("n", "<leader>bk", function()
     vim.api.nvim_win_close(winnr, true)
   end
 end, { desc = "Close split and buffer" })
+
+-- Supermaven keymaps
+map("n", "<leader>sm", function()
+  local supermaven = require("supermaven-nvim.api")
+  supermaven.toggle()
+  if supermaven.is_running() then
+    vim.notify("Supermaven enabled", vim.log.levels.INFO)
+  else
+    vim.notify("Supermaven disabled", vim.log.levels.INFO)
+  end
+end, { desc = "Toggle Supermaven AI" })
+
+map("n", "<leader>se", function()
+  require("supermaven-nvim.api").start()
+  vim.notify("Supermaven enabled", vim.log.levels.INFO)
+end, { desc = "Enable Supermaven AI" })
+
+map("n", "<leader>sd", function()
+  require("supermaven-nvim.api").stop()
+  vim.notify("Supermaven disabled", vim.log.levels.INFO)
+end, { desc = "Disable Supermaven AI" })
