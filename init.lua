@@ -141,7 +141,6 @@ vim.schedule(function()
   require("mappings")
 end)
 
-
 -- Ensure todo-comments is initialized with correct configuration early
 if pcall(require, "todo-comments") then
   -- Apply our todo-comments configuration to make sure it's properly initialized
@@ -196,11 +195,11 @@ if pcall(require, "todo-comments") then
 end
 
 -- Setup dashboard-nvim highlight groups
-vim.api.nvim_set_hl(0, 'DashboardHeader', { fg = '#7aa2f7', bold = true })
-vim.api.nvim_set_hl(0, 'DashboardFooter', { fg = '#a9b1d6', italic = true })
-vim.api.nvim_set_hl(0, 'DashboardCenterIcon', { fg = '#bb9af7' })
-vim.api.nvim_set_hl(0, 'DashboardCenterText', { fg = '#a9b1d6' })
-vim.api.nvim_set_hl(0, 'DashboardCenterKey', { fg = '#7dcfff', bold = true })
+vim.api.nvim_set_hl(0, "DashboardHeader", { fg = "#7aa2f7", bold = true })
+vim.api.nvim_set_hl(0, "DashboardFooter", { fg = "#a9b1d6", italic = true })
+vim.api.nvim_set_hl(0, "DashboardCenterIcon", { fg = "#bb9af7" })
+vim.api.nvim_set_hl(0, "DashboardCenterText", { fg = "#a9b1d6" })
+vim.api.nvim_set_hl(0, "DashboardCenterKey", { fg = "#7dcfff", bold = true })
 
 vim.opt.signcolumn = "yes"
 
@@ -221,7 +220,7 @@ vim.lsp.handlers["textDocument/hover"] = function() end
 vim.lsp.handlers["textDocument/signatureHelp"] = function() end
 
 -- Disable lspsaga winbar since we're using dropbar.nvim for breadcrumbs
-vim.o.winbar = ""
+-- vim.o.winbar = ""
 
 -- Initialize undotree and create commands manually
 local undotree_ok, undotree = pcall(require, "undotree")
@@ -245,6 +244,3 @@ if undotree_ok then
     -- Focus undotree implementation would go here if needed
   end, { desc = "Focus undotree" })
 end
-
-
-
