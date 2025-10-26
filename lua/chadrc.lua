@@ -6,7 +6,7 @@
 local M = {}
 
 M.base46 = {
-  theme = "vscode_dark",
+  theme = "solarized_osaka",
   transparency = true,
 
   -- hl_override = {
@@ -23,7 +23,7 @@ M.ui = {
     order = { "treeOffset", "buffers", "tabs", "btns" },
   },
   statusline = {
-    theme = "vscode_colored",
+    theme = "minimal",
     -- Choose separator style: "default", "arrow", "round", "slant", or "block"
     separator_style = "block", -- Using arrow separators for modern look
     -- Define custom order of statusline components

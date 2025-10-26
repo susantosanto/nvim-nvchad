@@ -200,16 +200,17 @@ map("v", "<leader>y", '"+y', { desc = "Copy to system clipboard" })
 map("v", "p", '"_dP', { desc = "Paste without overwriting yank" })
 map("v", "<", "<gv", { desc = "Indent left" })
 map("v", ">", ">gv", { desc = "Indent right" })
-map("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move lines down" })
-map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move lines up" })
+-- Moveline for moving lines in visual mode using original Alt+j/k
+map("v", "<A-j>", "<cmd>lua require('moveline').block_down()<CR>", { desc = "Move lines down" })
+map("v", "<A-k>", "<cmd>lua require('moveline').block_up()<CR>", { desc = "Move lines up" })
 map("v", "<A-S-j>", ":'<,'>t'><CR>gv=gv", { desc = "Duplicate block down" })
 map("v", "<A-S-k>", ":'<,'>t-1<CR>gv=gv", { desc = "Duplicate block up" })
 
--- Move line in Normal mode
-map("n", "<A-j>", ":m+1<CR>==", { desc = "Move line down" })
-map("n", "<A-k>", ":m-2<CR>==", { desc = "Move line up" })
+-- Move line in Normal mode using original Alt+j/k
+map("n", "<A-j>", "<cmd>lua require('moveline').down()<CR>", { desc = "Move line down" })
+map("n", "<A-k>", "<cmd>lua require('moveline').up()<CR>", { desc = "Move line up" })
 
--- Duplicate line in Normal mode
+-- Duplicate line in Normal mode (moveline doesn't have duplicate functions)
 map("n", "<A-S-j>", "Yp", { desc = "Duplicate line down" })
 map("n", "<A-S-k>", "Y^-1p", { desc = "Duplicate line up" })
 
@@ -220,10 +221,11 @@ map("i", "jj", "<Esc>", { desc = "Exit insert mode" })
 map("i", "<C-Space>", function()
   require("cmp").complete()
 end, { desc = "Trigger completion" })
-map("i", "<A-j>", "<Esc>:m .+1<CR>==gi", { desc = "Move line down" })
-map("i", "<A-k>", "<Esc>:m .-2<CR>==gi", { desc = "Move line up" })
-map("i", "<A-S-j>", "<Esc>:t.<CR>gi", { desc = "Duplicate line down" })
-map("i", "<A-S-k>", "<Esc>:t.-1<CR>gi", { desc = "Duplicate line up" })
+-- Moveline for moving lines in insert mode using original Alt+j/k
+map("i", "<A-j>", "<cmd>lua require('moveline').down()<CR>", { desc = "Move line down" })
+map("i", "<A-k>", "<cmd>lua require('moveline').up()<CR>", { desc = "Move line up" })
+map("i", "<A-S-j>", "Yp", { desc = "Duplicate line down" })
+map("i", "<A-S-k>", "Y^-1p", { desc = "Duplicate line up" })
 
 -- Comment keymaps
 map("n", "<leader>/", "<cmd>lua require('Comment.api').toggle.linewise.current()<CR>", { desc = "Toggle comment" })

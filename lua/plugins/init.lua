@@ -644,15 +644,15 @@ return {
       init = function()
         -- Konfigurasi VM
         vim.g.VM_mouse_mappings = 1
-        vim.g.VM_default_mappings = 1
+        vim.g.VM_default_mappings = 0 -- Disable default mappings to avoid conflicts
         vim.g.VM_leader = "\\"
         vim.g.VM_maps = {
-          ["Find Under"] = "<M-d>", -- Alt+d (tidak bentrok)
-          ["Find Subword Under"] = "<M-d>", -- Alt+d (tidak bentrok)
-          ["Select Cursor Down"] = "<M-j>", -- Alt+j (tidak bentrok)
-          ["Select Cursor Up"] = "<M-k>", -- Alt+k (tidak bentrok)
-          ["Skip Region"] = "<M-x>", -- Alt+x (tidak bentrok)
-          ["Remove Region"] = "<M-p>", -- Alt+p (tidak bentrok)
+          ["Find Under"] = "<M-d>", -- Use Ctrl+n (common for finding next occurrence)
+          ["Find Subword Under"] = "<M-d>", -- Same as Find Under
+          ["Select Cursor Down"] = "<C-Down>", -- Use Ctrl+Arrow Down (ergonomic for adding cursors)
+          ["Select Cursor Up"] = "<C-Up>", -- Use Ctrl+Arrow Up
+          ["Skip Region"] = "<M-n>", -- Use Ctrl+Arrow Right
+          ["Remove Region"] = "<M-p>", -- Use Ctrl+Backspace (doesn't conflict with existing mappings)
         }
       end,
     },
@@ -1141,6 +1141,29 @@ return {
             opts = { skip = true },
           },
         },
+        -- Modern command line UI at bottom (like search)
+        cmdline = {
+          enabled = true,
+          view = "cmdline", -- Use bottom-style cmdline like search
+          format = {
+            cmd = { icon = "➤" }, -- Arrow icon - more compatible but distinctive
+            search_down = { icon = "🔍 ▼" },
+            search_up = { icon = "🔍 ▲" },
+            filter = { icon = "$" },
+            lua = { icon = "🌙" },
+            input = {},
+          },
+        },
+        -- Messages and other UI elements at bottom like search
+        messages = {
+          enabled = true,
+          view = "mini", -- Minimalist message view at bottom
+        },
+        -- Popup menu configuration for modern look
+        popupmenu = {
+          enabled = true,
+          backend = "nui",
+        },
       },
     },
     -- Modern notification system
@@ -1260,6 +1283,33 @@ return {
       end,
     },
 
+    -- Markdown preview plugin (lightweight)
+    {
+      "OXY2DEV/markview.nvim",
+      ft = "markdown", -- Load only when opening markdown files
+      dependencies = {
+        "nvim-treesitter/nvim-treesitter",
+        "nvim-tree/nvim-web-devicons",
+      },
+      config = function()
+        require("markview").setup({
+          -- Minimal configuration for lightweight performance
+          modes = { "n", "i" }, -- Enable in normal and insert mode
+
+          -- Performance optimizations
+          cache = {
+            enabled = true, -- Enable caching for better performance
+          },
+
+          -- UI options (minimal for lightweight use)
+          ui = {
+            code = {
+              enabled = true, -- Show code block decorations
+            },
+          },
+        })
+      end,
+    },
     -- Close Buffers
     {
       "kazhala/close-buffers.nvim",
@@ -1477,5 +1527,14 @@ return {
       },
       event = { "BufReadPost", "BufNewFile" },
     },
+  },
+
+  -- Moveline: Move lines with Alt+j/k (will override existing mappings)
+  {
+    "willothy/moveline.nvim",
+    priority = 1000,
+    enabled = true,
+    build = "make",
+    config = true,
   },
 }

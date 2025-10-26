@@ -46,6 +46,9 @@ vim.api.nvim_buf_line_count = function(bufnr)
 end
 
 -- Configure diagnostic with professional icons for signs only (let tiny-inline-diagnostic handle virtual text)
+-- Add moveline.nvim to package.cpath so the compiled module can be loaded
+package.cpath = package.cpath .. ';/home/xcode/.local/share/nvim/lazy/moveline.nvim/lua/?.so'
+
 vim.diagnostic.config({
   virtual_text = false, -- Disable default virtual text, let tiny-inline-diagnostic handle it
   signs = {
@@ -245,6 +248,8 @@ if undotree_ok then
     -- Focus undotree implementation would go here if needed
   end, { desc = "Focus undotree" })
 end
+
+
 
 
 
