@@ -1,0 +1,9 @@
+-- File test untuk menguji warna-warna todo-comments dengan tema Solarized Osaka
+-- TODO: Ini adalah contoh TODO dengan warna biru (#268bd3) dan background gelap
+-- FIXME: Ini adalah contoh FIXME yang akan menggunakan warna merah (#db302d)
+-- BUG: Ini adalah contoh BUG dengan warna oranye (#C84C16)
+-- HACK: Ini adalah contoh HACK dengan warna kuning (#b28500)
+-- WARN: Ini adalah contoh WARNING dengan warna kuning (#b28500)
+-- PERF: Ini adalah contoh PERF yang akan menggunakan warna ungu (#575ea2)
+-- NOTE: Ini adalah contoh NOTE dengan warna hijau (#849900)
+-- TEST: Ini adalah contoh TEST untuk warna ungu (#575ea2)

@@ -6,33 +6,6 @@ if not success then
   vim.api.nvim_create_augroup("NvChadSafe", { clear = true })
 end
 
--- Custom highlight for todo-comments with more attractive colors
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "*",
-  callback = function()
-    -- Only execute once to avoid multiple definitions
-    if vim.g.todo_comments_highlights_set == nil then
-      vim.g.todo_comments_highlights_set = true
-      
-      -- Custom highlight groups for more attractive colors with background
-      vim.api.nvim_set_hl(0, "TodoFgFix", { fg = "#E74C3C", bold = true, bg = "#FFEBEE" })
-      vim.api.nvim_set_hl(0, "TodoBgFix", { bg = "#FFEBEE", fg = "#E74C3C" })
-      vim.api.nvim_set_hl(0, "TodoFgBug", { fg = "#C0392B", bold = true, bg = "#FFEBEE" }) -- Darker red for BUG
-      vim.api.nvim_set_hl(0, "TodoBgBug", { bg = "#FFEBEE", fg = "#C0392B" })
-      vim.api.nvim_set_hl(0, "TodoFgTodo", { fg = "#3498DB", bold = true, bg = "#E3F2FD" })
-      vim.api.nvim_set_hl(0, "TodoBgTodo", { bg = "#E3F2FD", fg = "#3498DB" })
-      vim.api.nvim_set_hl(0, "TodoFgHack", { fg = "#F39C12", bold = true, bg = "#FFF3E0" })
-      vim.api.nvim_set_hl(0, "TodoBgHack", { bg = "#FFF3E0", fg = "#F39C12" })
-      vim.api.nvim_set_hl(0, "TodoFgWarn", { fg = "#FF9800", bold = true, bg = "#FFF8E1" })
-      vim.api.nvim_set_hl(0, "TodoBgWarn", { bg = "#FFF8E1", fg = "#FF9800" })
-      vim.api.nvim_set_hl(0, "TodoFgPerf", { fg = "#9C27B0", bold = true, bg = "#F3E5F5" })
-      vim.api.nvim_set_hl(0, "TodoBgPerf", { bg = "#F3E5F5", fg = "#9C27B0" })
-      vim.api.nvim_set_hl(0, "TodoFgNote", { fg = "#4CAF50", bold = true, bg = "#E8F5E8" })
-      vim.api.nvim_set_hl(0, "TodoBgNote", { bg = "#E8F5E8", fg = "#4CAF50" })
-    end
-  end,
-  desc = "Set custom highlight colors for todo-comments",
-})
 
 -- Add custom autocmds to handle the buffer deletion error
 local buffer_group = vim.api.nvim_create_augroup("BufferSafeHandling", { clear = true })

@@ -6,5 +6,6 @@
 -- NOTE: Ini adalah contoh catatan dengan warna hijau
 -- BUG: Ini sekarang ditangani secara spesifik dengan ikon dan warna merah tua
 -- XXX: Ini akan ditandai sebagai WARNING
+-- TEST: ini adalah tes
 
 print("File test untuk todo-comments dengan warna-warna menarik")

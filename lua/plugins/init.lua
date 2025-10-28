@@ -489,85 +489,6 @@ return {
     enabled = false, -- Already configured as dependency above
   },
 
-  -- Todo Comments: Highlight and search for todo comments
-  {
-    "folke/todo-comments.nvim",
-    dependencies = "nvim-lua/plenary.nvim",
-    config = function()
-      require("configs.todo_comments").setup({
-        signs = true, -- show icons in the signs column
-        sign_priority = 8, -- sign priority
-        -- keywords recognized as todo comments
-        keywords = {
-          FIX = {
-            icon = "󰁍 ", -- icon used for the sign, and in search results
-            color = "error", -- can be a hex color, or a named color (see below)
-            alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
-          },
-          TODO = { icon = "󰌶 ", color = "info" },
-          HACK = { icon = "󰊙 ", color = "warning" },
-          WARN = { icon = "󰌱 ", color = "warning", alt = { "WARNING", "XXX" } },
-          PERF = { icon = "󰓅 ", alt = { "OPTIM", "PERFORMANCE", "BENCH", "BENCHMARK" } },
-          NOTE = { icon = "󰋽 ", color = "hint", alt = { "INFO" } },
-          BUG = { icon = "󰨰 ", color = "error" }, -- Specific icon for BUG to make sure it's handled
-        },
-        gui_style = {
-          fg = "BOLD", -- Bold foreground text
-          bg = "italic", -- Italic background (for virtual text)
-        },
-        merge_keywords = true, -- when true, custom keywords will be merged with the defaults
-        -- highlighting of the line containing the todo comment
-        highlight = {
-          multiline = true, -- enable multine todo comments
-          multiline_pattern = "^.", -- lua pattern to match the next multiline from the start of the matched keyword
-          multiline_context = 10, -- extra lines that will be re-evaluated when changing a line
-          before = "", -- "fg" or "bg" or empty
-          keyword = "wide", -- "fg", "bg", "wide", "wide_bg", "wide_fg" or empty.
-          after = "fg", -- "fg" or "bg" or empty
-          pattern = [[.*<(KEYWORDS)\s*:]], -- pattern or table of patterns, used for highlighting (vim regex)
-          comments_only = true, -- uses treesitter to identify comments in the buffer, if it's not available it falls back to vim.v.commentleader
-          max_line_len = 400, -- ignore lines longer than this
-          exclude = {}, -- list of file types to exclude highlighting
-        },
-        -- list of named colors where we try to extract the guifg from the
-        -- list of highlight groups or use the hex color if hl not found as a fallback
-        colors = {
-          error = { "DiagnosticError", "ErrorMsg", "#E74C3C" }, -- Vibrant red
-          warning = { "DiagnosticWarn", "WarningMsg", "#F39C12" }, -- Vibrant orange
-          info = { "DiagnosticInfo", "#3498DB" }, -- Vibrant blue
-          hint = { "DiagnosticHint", "#1ABC9C" }, -- Vibrant teal
-          default = { "Identifier", "#9B59B6" }, -- Vibrant purple
-          test = { "Identifier", "#8E44AD" }, -- Vibrant violet
-        },
-        search = {
-          command = "TodoTelescope",
-          args = {
-            -- what to search for in todo-comments
-            -- NOTE: we don't include '@' at the beginning to support both
-            -- `-- TODO` and `# TODO` and other comment styles
-            pattern = [[\b\w*TODO\b]], -- match without the extra colon
-          },
-        },
-      })
-    end,
-    keys = {
-      {
-        "]t",
-        function()
-          require("todo-comments").jump_next()
-        end,
-        desc = "Next todo comment",
-      },
-      {
-        "[t",
-        function()
-          require("todo-comments").jump_prev()
-        end,
-        desc = "Previous todo comment",
-      },
-      { "<leader>fd", "<cmd>TodoTelescope<cr>", desc = "Find todo comments" },
-    },
-    -- Typescript: Enhanced TypeScript/JavaScript support
     {
       "jose-elias-alvarez/typescript.nvim",
       opts = {
@@ -1527,7 +1448,6 @@ return {
       },
       event = { "BufReadPost", "BufNewFile" },
     },
-  },
 
   -- Moveline: Move lines with Alt+j/k (will override existing mappings)
   {
@@ -1537,4 +1457,91 @@ return {
     build = "make",
     config = true,
   },
+
+  -- Todo Comments: Highlight, list and search todo comments in your files
+  {
+    "folke/todo-comments.nvim",
+    event = "BufReadPost",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {
+      signs = true, -- show icons in the signs column
+      sign_priority = 8, -- sign priority
+      -- keywords recognized as todo comments
+      keywords = {
+        FIX = {
+          icon = "󰓛", -- fixed: square root symbol
+          color = "error",
+          alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that are treated like this keyword
+        },
+        TODO = { icon = "󰗡", color = "info" }, -- task: checkmark
+        HACK = { icon = "󰊖", color = "warning" }, -- tool: hammer and pick
+        WARN = { icon = "󰀪", color = "warning", alt = { "WARNING", "XXX" } }, -- warning: warning sign
+        PERF = { icon = "󰾅", color = "hint", alt = { "OPTIMIZE", "PERFORMANCE", "BENCH", "BENCHMARK" } }, -- performance: fast up arrow
+        NOTE = { icon = "󰍨", color = "hint", alt = { "INFO", "IDEA" } }, -- note: lightbulb
+        TEST = { icon = "󰄵", color = "test", alt = { "TESTING", "PASSED", "FAILED" } }, -- test: beaker
+      },
+      -- highlighting of the line containing the todo comment
+      highlight = {
+        multiline = true, -- enable multine todo comments
+        multiline_pattern = "^.", -- match any character at the beginning of the line
+        multiline_context = 10, -- extra lines that will be re-evaluated when changing a line
+        before = "", -- "fg" or "bg" or empty
+        keyword = "wide", -- "fg", "bg", "wide", "wide_bg", "wide_fg" or empty.
+        after = "fg", -- "fg" or "bg" or empty
+        pattern = [[.*<(KEYWORDS)\s*:]], -- pattern or table of patterns, used for highlighting (vim regex)
+        comments_only = true, -- uses treesitter to match keywords in comments only
+        max_line_len = 400, -- ignore lines longer than this
+        exclude = {}, -- list of file types to exclude highlighting
+      },
+      -- list of named colors where we try to extract the guifg from the
+      -- list of highlight groups or use the hex color if hl not found as a fallback
+      colors = {
+        error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
+        warning = { "DiagnosticWarn", "WarningMsg", "#F59E0B" },
+        info = { "DiagnosticInfo", "#2563EB" },
+        hint = { "DiagnosticHint", "#10B981" },
+        test = { "DiagnosticOk", "#7C3AED" },
+      },
+      search = {
+        command = "grep",
+        args = {
+          "--color=never",
+          "--no-group-separator",
+          "--line-number",
+          "--recursive",
+          "--exclude-dir=node_modules",
+          "--include=*.lua",
+          "--include=*.js",
+          "--include=*.ts",
+          "--include=*.tsx",
+          "--include=*.py",
+          "--include=*.html",
+          "--include=*.css",
+          "--include=*.json",
+          "--include=*.md",
+          "--include=*.yaml",
+          "--include=*.yml",
+          "--include=*.php",
+          "--include=*.go",
+          "--include=*.rb",
+          "--include=*.java",
+          "--include=*.rs",
+          "--include=*.cpp",
+          "--include=*.c",
+          "--include=*.h",
+        },
+        -- regex that will be used to match keywords.
+        -- all separate keywords that are found will be
+        -- highlighted in the file and matched in the search results
+        pattern = [[\b(KEYWORDS)\b]], -- ripgrep regex
+      },
+    },
+    -- Keymaps for todo-comments functionality
+    keys = {
+      { "]t", function() require("todo-comments").jump_next() end, desc = "Next todo comment" },
+      { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous todo comment" },
+      { "<leader>ft", "<cmd>TodoTelescope<cr>", desc = "Find todo comments" },
+      { "<leader>st", "<cmd>TodoTelescope<cr>", desc = "Search todo comments" },
+    },
+  }
 }

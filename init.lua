@@ -47,7 +47,7 @@ end
 
 -- Configure diagnostic with professional icons for signs only (let tiny-inline-diagnostic handle virtual text)
 -- Add moveline.nvim to package.cpath so the compiled module can be loaded
-package.cpath = package.cpath .. ';/home/xcode/.local/share/nvim/lazy/moveline.nvim/lua/?.so'
+package.cpath = package.cpath .. ";/home/xcode/.local/share/nvim/lazy/moveline.nvim/lua/?.so"
 
 vim.diagnostic.config({
   virtual_text = false, -- Disable default virtual text, let tiny-inline-diagnostic handle it
@@ -144,67 +144,12 @@ vim.schedule(function()
   require("mappings")
 end)
 
-
--- Ensure todo-comments is initialized with correct configuration early
-if pcall(require, "todo-comments") then
-  -- Apply our todo-comments configuration to make sure it's properly initialized
-  require("todo-comments").setup({
-    signs = true,
-    sign_priority = 8,
-    keywords = {
-      FIX = {
-        icon = "󰁍 ",
-        color = "error",
-        alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
-      },
-      TODO = { icon = "󰌶 ", color = "info" },
-      HACK = { icon = "󰊙 ", color = "warning" },
-      WARN = { icon = "󰌱 ", color = "warning", alt = { "WARNING", "XXX" } },
-      PERF = { icon = "󰓅 ", alt = { "OPTIM", "PERFORMANCE", "BENCH", "BENCHMARK" } },
-      NOTE = { icon = "󰋽 ", color = "hint", alt = { "INFO" } },
-      BUG = { icon = "󰨰 ", color = "error" },
-    },
-    gui_style = {
-      fg = "BOLD",
-      bg = "italic",
-    },
-    merge_keywords = true,
-    highlight = {
-      multiline = true,
-      multiline_pattern = "^.",
-      multiline_context = 10,
-      before = "fg",
-      keyword = "wide",
-      after = "fg",
-      pattern = [[.*<(KEYWORDS)\s*:]], -- pattern or table of patterns, used for highlighting (vim regex)
-      comments_only = true,
-      max_line_len = 400,
-      exclude = {},
-    },
-    colors = {
-      error = { "DiagnosticError", "ErrorMsg", "#C72E0F" }, -- Merah yang lebih gelap untuk kontras lebih baik
-      warning = { "DiagnosticWarn", "WarningMsg", "#D9A20F" }, -- Oranye yang lebih kontras
-      info = { "DiagnosticInfo", "#1E66F5" }, -- Biru yang lebih gelap, lebih kontras
-      hint = { "DiagnosticHint", "#0F9D58" }, -- Hijau yang lebih kontras
-      default = { "Identifier", "#9B59B6" },
-      test = { "Identifier", "#8E44AD" },
-    },
-    search = {
-      command = "TodoTelescope",
-      args = {
-        pattern = [[\b\w*TODO\b]],
-      },
-    },
-  })
-end
+-- Configuration is now handled in plugins/init.lua
 
 -- Setup dashboard-nvim highlight groups
-vim.api.nvim_set_hl(0, 'DashboardHeader', { fg = '#7aa2f7', bold = true })
-vim.api.nvim_set_hl(0, 'DashboardFooter', { fg = '#a9b1d6', italic = true })
-vim.api.nvim_set_hl(0, 'DashboardCenterIcon', { fg = '#bb9af7' })
-vim.api.nvim_set_hl(0, 'DashboardCenterText', { fg = '#a9b1d6' })
-vim.api.nvim_set_hl(0, 'DashboardCenterKey', { fg = '#7dcfff', bold = true })
-
+vim.api.nvim_set_hl(0, "DashboardHeader", { fg = "#7aa2f7", bold = true })
+vim.api.nvim_set_hl(0, "DashboardCenterIcon", { fg = "#bb9af7" })
+vim.api.nvim_set_hl(0, "DashboardCenterText", { fg = "#a9b1d6" })
 vim.opt.signcolumn = "yes"
 
 -- Disable all automatic hover and signature help globally to prevent mode switching
@@ -249,7 +194,4 @@ if undotree_ok then
   end, { desc = "Focus undotree" })
 end
 
-
-
-
-
+vim.cmd([[autocmd FileType * set formatoptions-=ro]])
