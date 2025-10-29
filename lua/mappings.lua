@@ -163,7 +163,6 @@ map("n", "h", function()
 end, { buffer = true, desc = "Close folder in NvimTree", nowait = true })
 
 -- Keymaps untuk LSP functionality yang dinonaktifkan secara otomatis
-map("n", "K", "", { desc = "LSP Documentation" })
 map("n", "K", function()
   -- Hanya aktifkan jika LSP tersedia
   local clients = vim.lsp.get_clients()
@@ -291,6 +290,12 @@ map("n", "<leader>cm", function()
   local options = vim.bo.ft == "NvimTree" and "nvimtree" or "default"
   require("menu").open(options, { mouse = false })
 end, { desc = "Open context menu with keyboard" })
+
+-- Quick access to context menu with Alt+o
+map("n", "<A-o>", function()
+  local options = vim.bo.ft == "NvimTree" and "nvimtree" or "default"
+  require("menu").open(options, { mouse = false })
+end, { desc = "Open context menu (Alt+o)" })
 
 -- Close buffer
 map("n", "<leader>x", function()
@@ -688,18 +693,6 @@ end
 
 -- Keymap to rename HTML/XML tags
 map("n", "<leader>rt", rename_html_tag, { desc = "Rename HTML/XML tag and its pair" })
-
--- Keymaps untuk LSP functionality yang dinonaktifkan secara otomatis
-map("n", "K", function()
-  -- Hanya aktifkan jika LSP tersedia
-  local clients = vim.lsp.get_clients()
-  if #clients > 0 then
-    vim.lsp.buf.hover()
-  else
-    -- Fall back to normal K behavior if no LSP
-    vim.cmd("normal! " .. vim.v.count .. "k")
-  end
-end, { desc = "Show documentation (when LSP available)", noremap = true, silent = true })
 
 map("n", "<leader>k", function()
   local clients = vim.lsp.get_clients()
