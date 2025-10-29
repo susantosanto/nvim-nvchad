@@ -45,6 +45,38 @@ vim.api.nvim_buf_line_count = function(bufnr)
   end
 end
 
+-- Override nvim_buf_set_extmark to handle TreeSitter highlighting errors
+local original_buf_set_extmark = vim.api.nvim_buf_set_extmark
+vim.api.nvim_buf_set_extmark = function(bufnr, ns_id, line, col, opts)
+  -- Validate parameters before calling the original function
+  if line < 0 then
+    return -- Don't set extmark if line is negative
+  end
+
+  local buf_line_count = vim.api.nvim_buf_line_count(bufnr)
+  if line >= buf_line_count then
+    return -- Don't set extmark if line is beyond buffer range
+  end
+
+  local line_text = vim.api.nvim_buf_get_lines(bufnr, line, line + 1, false)[1] or ""
+  if col > #line_text then
+    return -- Don't set extmark if col is beyond line length
+  end
+
+  -- Call the original function if all checks pass
+  local success, result = pcall(original_buf_set_extmark, bufnr, ns_id, line, col, opts)
+  if not success then
+    -- Log the error but don't crash
+    vim.schedule(function()
+      -- Optionally log the error, but keep it silent to avoid spam
+      -- vim.notify("TreeSitter extmark error prevented: " .. result, vim.log.levels.WARN)
+    end)
+    return
+  end
+
+  return result
+end
+
 -- Configure diagnostic with professional icons for signs only (let tiny-inline-diagnostic handle virtual text)
 -- Add moveline.nvim to package.cpath so the compiled module can be loaded
 package.cpath = package.cpath .. ";/home/xcode/.local/share/nvim/lazy/moveline.nvim/lua/?.so"

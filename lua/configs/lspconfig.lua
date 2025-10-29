@@ -36,6 +36,8 @@ local servers = {
   "yamlls", -- YAML files
   "ts_ls", -- TypeScript/JavaScript
   "intelephense", -- PHP for Laravel
+  "biome", -- Biome for modern JavaScript/TypeScript linting and formatting
+  "efm", -- EFM Langserver for generic LSP support (eslint, etc.)
 }
 
 -- Add specific JavaScript/TypeScript server that doesn't conflict with ESLint
@@ -124,6 +126,24 @@ if mason_lspconfig_ok then
         elseif server_name == "volar" then
           opts.root_dir = lspconfig.util.root_pattern("package.json", "vue.config.js", ".git")
           opts.filetypes = { "vue", "javascript", "typescript", "javascriptreact", "typescriptreact" }
+        elseif server_name == "biome" then
+          opts.cmd = { "biome", "lsp-proxy" }
+          opts.root_dir = lspconfig.util.root_pattern("biome.json", "biome.jsonc", "package.json", ".git")
+        elseif server_name == "efm" then
+          opts.cmd = { "efm-langserver" }
+          opts.init_options = { documentFormatting = true }
+          opts.filetypes = {
+            "lua",
+            "python",
+            "javascript",
+            "typescript",
+            "javascriptreact",
+            "typescriptreact",
+            "vue",
+            "svelte",
+            "php",
+          }
+          opts.root_dir = lspconfig.util.root_pattern(".git", ".efm-config.yaml", ".efm-config.yml", "package.json")
         end
 
         lspconfig[server_name].setup(opts)
