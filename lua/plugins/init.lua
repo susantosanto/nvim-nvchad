@@ -432,17 +432,20 @@ return {
         view = {
           width = 30,
           side = "left",
+          relativenumber = false,
         },
         renderer = {
           add_trailing = false,
           group_empty = false,
           highlight_git = true,
           highlight_opened_files = "none",
-          root_folder_label = ":~:s?$?/..?",
+          root_folder_label = ":t",
           indent_width = 2,
           indent_markers = {
             enable = false,
           },
+          special_files = { "Cargo.toml", "Makefile", "README.md", "readme.md", "package.json" },
+          symlink_destination = true,
           icons = {
             web_devicons = {
               file = {
@@ -483,6 +486,10 @@ return {
               },
             },
           },
+        },
+        filters = {
+          dotfiles = false,
+          custom = { ".git" },
         },
         git = {
           enable = true,
