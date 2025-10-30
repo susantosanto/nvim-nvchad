@@ -433,6 +433,18 @@ return {
           width = 30,
           side = "left",
           relativenumber = false,
+          float = {
+            enable = false,
+            quit_on_focus_loss = true,
+            open_win_config = {
+              relative = "editor",
+              border = "none",  -- Make border transparent/none
+              width = 30,
+              height = 30,
+              row = 1,
+              col = 1,
+            },
+          },
         },
         renderer = {
           add_trailing = false,
@@ -1377,5 +1389,10 @@ return {
       { "<leader>ft", "<cmd>TodoTelescope<cr>", desc = "Find todo comments" },
       { "<leader>st", "<cmd>TodoTelescope<cr>", desc = "Search todo comments" },
     },
+  },
+  -- Beacon: Highlight cursor movements for better visibility
+  {
+    "DanilaMihailov/beacon.nvim",
+    event = "VeryLazy", -- Load on startup for immediate use
   },
 }
