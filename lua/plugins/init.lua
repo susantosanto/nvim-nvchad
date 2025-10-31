@@ -1395,4 +1395,6 @@ return {
     "DanilaMihailov/beacon.nvim",
     event = "VeryLazy", -- Load on startup for immediate use
   },
+
+
 }

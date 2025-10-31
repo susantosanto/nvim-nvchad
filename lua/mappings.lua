@@ -82,6 +82,13 @@ map("n", "<leader>gr", "<cmd>lua require('gitsigns').reset_hunk()<CR>", { desc =
 map("n", "<leader>gs", "<cmd>lua require('gitsigns').stage_hunk()<CR>", { desc = "Stage Git hunk" })
 map("n", "<leader>gu", "<cmd>lua require('gitsigns').undo_stage_hunk()<CR>", { desc = "Undo stage Git hunk" })
 
+-- Keymaps untuk gitsigns toggle
+map("n", "<leader>gts", "<cmd>Gitsigns toggle_signs<CR>", { desc = "Toggle gitsigns signs" })
+map("n", "<leader>gtn", "<cmd>Gitsigns toggle_numhl<CR>", { desc = "Toggle gitsigns number highlight" })
+map("n", "<leader>gtl", "<cmd>Gitsigns toggle_linehl<CR>", { desc = "Toggle gitsigns line highlight" })
+map("n", "<leader>gtw", "<cmd>Gitsigns toggle_word_diff<CR>", { desc = "Toggle gitsigns word diff" })
+map("n", "<leader>gtb", "<cmd>Gitsigns toggle_current_line_blame<CR>", { desc = "Toggle gitsigns current line blame" })
+
 -- Keymaps untuk colorizer
 map("n", "<leader>cc", "<cmd>ColorizerToggle<CR>", { desc = "Toggle Colorizer" })
 
