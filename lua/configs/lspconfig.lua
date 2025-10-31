@@ -86,8 +86,8 @@ if mason_lspconfig_ok then
               includeLanguages = {
                 javascript = "javascript",
                 typescript = "typescript",
-                "javascriptreact",
-                "typescriptreact",
+                javascriptreact = "javascriptreact",
+                typescriptreact = "typescriptreact",
                 svelte = "html",
                 vue = "vue",
                 astro = "astro",
