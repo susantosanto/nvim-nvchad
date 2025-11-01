@@ -45,22 +45,29 @@ vim.api.nvim_buf_line_count = function(bufnr)
   end
 end
 
--- Override nvim_buf_set_extmark to handle TreeSitter highlighting errors
+-- Override nvim_buf_set_extmark to handle TreeSitter highlighting errors BUT STILL UPDATE HIGHLIGHTS
 local original_buf_set_extmark = vim.api.nvim_buf_set_extmark
 vim.api.nvim_buf_set_extmark = function(bufnr, ns_id, line, col, opts)
   -- Validate parameters before calling the original function
   if line < 0 then
-    return -- Don't set extmark if line is negative
+    -- DON'T return early, adjust the value instead
+    line = 0
   end
 
   local buf_line_count = vim.api.nvim_buf_line_count(bufnr)
   if line >= buf_line_count then
-    return -- Don't set extmark if line is beyond buffer range
+    -- Don't return early, adjust to last line
+    if buf_line_count > 0 then
+      line = buf_line_count - 1
+    else
+      return -- If buffer is empty, return
+    end
   end
 
   local line_text = vim.api.nvim_buf_get_lines(bufnr, line, line + 1, false)[1] or ""
   if col > #line_text then
-    return -- Don't set extmark if col is beyond line length
+    -- Adjust column to line length
+    col = #line_text
   end
 
   -- Call the original function if all checks pass
@@ -69,7 +76,7 @@ vim.api.nvim_buf_set_extmark = function(bufnr, ns_id, line, col, opts)
     -- Log the error but don't crash
     vim.schedule(function()
       -- Optionally log the error, but keep it silent to avoid spam
-      -- vim.notify("TreeSitter extmark error prevented: " .. result, vim.log.levels.WARN)
+      -- vim.notify("TreeSitter extmark error: " .. result, vim.log.levels.WARN)
     end)
     return
   end
