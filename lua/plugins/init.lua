@@ -438,7 +438,7 @@ return {
             quit_on_focus_loss = true,
             open_win_config = {
               relative = "editor",
-              border = "none",  -- Make border transparent/none
+              border = "none", -- Make border transparent/none
               width = 30,
               height = 30,
               row = 1,
@@ -838,7 +838,7 @@ return {
       statuscolumn = { enabled = true },
       words = { enabled = true },
       dashboard = { enabled = false }, -- Disable if using alpha dashboard
-      indent = { enabled = true },
+      indent = { enabled = false },
       progress = { enabled = true },
       scope = { enabled = true },
       statusline = { enabled = true },
@@ -1114,6 +1114,7 @@ return {
         remove_blankline_trail = true,
       },
       scope = {
+        enabled = false,
         char = "",
         show_start = false,
         show_end = false,
@@ -1395,6 +1396,4 @@ return {
     "DanilaMihailov/beacon.nvim",
     event = "VeryLazy", -- Load on startup for immediate use
   },
-
-
 }

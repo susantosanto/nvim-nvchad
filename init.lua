@@ -227,3 +227,21 @@ if undotree_ok then
 end
 
 vim.cmd([[autocmd FileType * set formatoptions-=ro]])
+
+vim.cmd([[
+  " Hapus semua highlight indent line
+  highlight clear IndentBlanklineIndent1
+  highlight clear IndentBlanklineIndent2
+  highlight clear IndentBlanklineIndent3
+  highlight clear IndentBlanklineIndent4
+  highlight clear IndentBlanklineIndent5
+  highlight clear IndentBlanklineIndent6
+
+  " Hapus context line dari treesitter
+  highlight clear TreesitterContext
+  highlight clear TreesitterContextLineNumber
+
+  " Cursorline bersih (hanya sorot baris, bukan indent)
+  highlight CursorLine guibg=#282c34 gui=NONE
+  highlight CursorLineNr guifg=#abb2bf gui=bold
+]])
