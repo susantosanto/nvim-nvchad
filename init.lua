@@ -249,6 +249,5 @@ vim.cmd([[
   highlight clear TreesitterContextLineNumber
 
   " Cursorline bersih (hanya sorot baris, bukan indent)
-  highlight CursorLine guibg=#282c34 gui=NONE
-  highlight CursorLineNr guifg=#abb2bf gui=bold
+  " highlight CursorLine dan CursorLineNr akan diatur oleh modes.nvim
 ]])
