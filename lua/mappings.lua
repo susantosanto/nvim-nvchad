@@ -161,13 +161,7 @@ end, { desc = "Delete all Notifications" })
 
 -- Keymap untuk NvimTree
 map("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle NvimTree" })
--- NvimTree keymaps untuk buka/tutup folder/file
-map("n", "l", function()
-  require("nvim-tree.api").node.open.edit()
-end, { buffer = true, desc = "Open file/folder in NvimTree", nowait = true })
-map("n", "h", function()
-  require("nvim-tree.api").node.navigate.parent_close()
-end, { buffer = true, desc = "Close folder in NvimTree", nowait = true })
+-- NvimTree h/l mappings are handled via on_attach in plugins config, not needed here
 
 -- Keymaps untuk LSP functionality yang dinonaktifkan secara otomatis
 map("n", "K", function()
