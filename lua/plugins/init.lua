@@ -592,7 +592,7 @@ return {
     config = function()
       require("nvim-tree").setup({
         view = {
-          width = 28,
+          width = 30,
           side = "left",
           -- side = "right",
           relativenumber = false,
@@ -1008,7 +1008,7 @@ return {
       statuscolumn = { enabled = true },
       words = { enabled = true },
       dashboard = { enabled = false }, -- Disable if using alpha dashboard
-      indent = { enabled = false },
+      indent = { enabled = true },
       progress = { enabled = true },
       scope = { enabled = true },
       statusline = { enabled = true },

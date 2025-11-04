@@ -43,9 +43,12 @@ Whether you're building React applications, developing Node.js services, working
 - **FkNotes** - Personal note-taking system with Obsidian integration
 - **Nvim-Gemini-Companion** - Qwen AI models integration for code assistance
 - **Opencode.nvim** - Collaborative code sharing and review platform
+- **Tiny-Code-Action** - Minimal code action interface
+- **Undo-Glow.nvim** - Visual feedback for undo, redo, yank, paste, search operations
 
 ### 🖱️ Multi-Cursor & Editing
 - **vim-visual-multi** - VS Code-style multi-cursor editing with intuitive shortcuts
+- **moveline.nvim** - Move lines with Alt+j/k
 
 ### 🧠 Language Intelligence
 - **nvim-lspconfig** - Language server protocol integration
@@ -54,6 +57,8 @@ Whether you're building React applications, developing Node.js services, working
 - **Typescript.nvim** - Enhanced TypeScript/JavaScript support
 - **PHPactor** - PHP language intelligence
 - **Prisma.nvim** - Prisma schema syntax highlighting
+- **nvim-lint** - Linting support
+- **conform.nvim** - Formatting support
 
 ### 🎯 Navigation & Search
 - **Telescope** - Fuzzy finder for files, buffers, and code
@@ -61,29 +66,35 @@ Whether you're building React applications, developing Node.js services, working
 - **Which-Key** - Interactive key binding guide
 - **Hop.nvim** - Efficient character navigation
 - **Flash.nvim** - Lightning-fast motion system
+- **dropbar.nvim** - Breadcrumbs like VS Code/ JetBrains
+- **nvim-biscuits** - Show context at the end of long lines
 
 ### 🛠️ Development Tools
 - **Trouble** - Pretty diagnostics list and quick fixes
 - **Neogen** - Documentation generation
 - **Comment** - Smart code commenting
-- **Surround** - Text object manipulation
+- **Surround** - Text object manipulation (both nvim-surround and mini.surround)
 - **AutoPairs** - Automatic bracket and quote pairing
 - **Autotag** - HTML/XML tag auto-closing
+- **nvim-ufo** - Advanced code folding
+- **Beacon** - Highlight cursor movements for better visibility
 
 ### 🎨 UI Enhancements
 - **Bufferline** - Enhanced tab and buffer management
 - **Lualine** - Beautiful status line
-- **Indent Blankline** - Visual indentation guides
+- **Indent Blankline** - Visual indentation guides (minimized)
 - **Colorizer** - Color code highlighting
 - **Noice** - Improved notifications and UI elements
 - **Notify** - Elegant notification system
 - **Twilight** - Focus mode for reduced distractions
+- **smear-cursor.nvim** - Smooth cursor animation
 
 ### 🌐 Web Development
 - **Tailwind Tools** - Tailwind CSS utilities and colorizer
 - **Volar** - Vue.js development support
 - **Emmet** - HTML/CSS abbreviation expansion
 - **Live Server** - Local development server integration
+- **tailwind-autosort.nvim** - Automatic sorting of Tailwind CSS classes
 
 ### 🐛 Debugging & Testing
 - **DAP** - Debug Adapter Protocol integration
@@ -96,13 +107,19 @@ Whether you're building React applications, developing Node.js services, working
 - **Fugitive** - Powerful Git client
 - **Floaterm** - Floating terminal emulator
 - **Session Manager** - Workspace persistence
+- **autosave.nvim** - Auto save plugin
+- **store.nvim** - Plugin for storing and retrieving code snippets/notes
+- **Undotree** - Visualize undo history
 
 ### 🎯 Specialized Functionality
-- **Mini.nvim** - Collection of minimal utility plugins
+- **Mini.nvim** - Collection of minimal utility plugins (mini.animate, mini.pairs, mini.surround, mini.trailspace, mini.files)
 - **Snacks.nvim** - Essential productivity enhancements
-- **UFO** - Advanced code folding
-- **Rainbow** - Nested parentheses colorization
-- **Context** - Context-aware code display
+- **Rainbow delimiters** - Nested parentheses colorization
+- **Treesitter Context** - Show context for code blocks
+- **markview.nvim** - Markdown preview plugin
+- **buffer-sticks.nvim** - Quick buffer switching
+- **typr.nvim** - Typing practice plugin
+- **close-buffers.nvim** - Close multiple buffers
 
 ---
 
@@ -127,6 +144,8 @@ Whether you're building React applications, developing Node.js services, working
 | `Space fg` | Live Grep | Search text across project |
 | `Space fb` | Find Buffers | Switch between open buffers |
 | `Space te` | File Browser | Browse files in tree view |
+| `]t` | Next Todo Comment | Jump to next todo comment |
+| `[t` | Previous Todo Comment | Jump to previous todo comment |
 
 ### 📁 File Operations
 | Shortcut | Function | Description |
@@ -134,6 +153,8 @@ Whether you're building React applications, developing Node.js services, working
 | `Space e` | Toggle Explorer | Show/hide file explorer |
 | `Space tn` | New Tab | Create new tab |
 | `Space tc` | Close Tab | Close current tab |
+| `Space x` | Close Buffer | Close current buffer |
+| `Space bk` | Close Split and Buffer | Close current window and buffer |
 
 ### 💻 Development
 | Shortcut | Function | Description |
@@ -141,6 +162,8 @@ Whether you're building React applications, developing Node.js services, working
 | `Space fm` | Format Code | Auto-format current file |
 | `Space ca` | Code Action | Trigger code action menu |
 | `Space cc` | Toggle Comment | Comment/uncomment selected lines |
+| `Space cy` | Copy Whole File | Copy entire file to clipboard |
+| `Space rt` | Rename HTML/XML tag | Rename tag and its pair |
 | `gd` | Go to Definition | Jump to variable/function definition |
 | `gr` | Find References | Show all references to symbol |
 | `K` | Show Documentation | Display hover documentation |
@@ -167,6 +190,170 @@ Whether you're building React applications, developing Node.js services, working
 | `Space gc` | Git Commit | Commit current changes |
 | `Space gp` | Git Push | Push commits to remote |
 | `Space gl` | Git Log | View commit history |
+
+### 📦 Plugin-Specific Keymaps
+
+#### Nvim-Surround (separate from mini.surround)
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `ysiw)` | Surround Inner Word with Parentheses | Wrap current word in parentheses |
+| `ysiw"` | Surround Inner Word with Quotes | Wrap current word in quotes |
+| `cs"'` | Change Surround from Quotes to Apostrophes | Replace quotes with apostrophes |
+| `ds"` | Delete Surround | Remove quotes around text |
+| `ys{motion}t` | Surround with HTML Tag | Prompt for HTML tag name |
+
+#### Mini.surround (via leader+m prefix)
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `<leader>+msa` | Add Surround | Add surrounding brackets/quotes |
+| `<leader>+msd` | Delete Surround | Delete surrounding brackets/quotes |
+| `<leader>+msr` | Replace Surround | Replace surrounding brackets/quotes |
+| `<leader>+msf` | Find Surround | Find surrounding brackets/quotes |
+
+#### Mini.files (via leader+m prefix)
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `<leader>+mf` | Open Mini.files (current dir) | File explorer for current file directory |
+| `<leader>+mF` | Open Mini.files (working dir) | File explorer for working directory |
+
+#### Mini.trailspace (via leader+m prefix)
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `<leader>+mtw` | Trim Whitespace | Remove trailing whitespace |
+| `<leader>+mtl` | Trim Last Lines | Remove empty last lines |
+
+#### Telescope Extensions
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `Space fi` | Find Media Files | Search for images and media files |
+
+#### Floaterm Keymaps
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `Ctrl+p` | Toggle Floaterm | Open/close floating terminal |
+| `Ctrl+j` | Cycle to Previous Floaterm | Navigate between terminals |
+| `Ctrl+k` | Cycle to Next Floaterm | Navigate between terminals |
+
+#### Git Operations (Gitsigns)
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `Space gj` | Next Git Hunk | Move to next Git hunk |
+| `Space gk` | Previous Git Hunk | Move to previous Git hunk |
+| `Space gp` | Preview Git Hunk | Preview Git hunk |
+| `Space gr` | Reset Git Hunk | Reset Git hunk |
+| `Space gs` | Stage Git Hunk | Stage Git hunk |
+| `Space gu` | Undo Stage Git Hunk | Undo stage Git hunk |
+| `Space gts` | Toggle Signs | Toggle Git signs |
+| `Space gtn` | Toggle Number Highlight | Toggle Git number highlighting |
+| `Space gtl` | Toggle Line Highlight | Toggle Git line highlighting |
+| `Space gtw` | Toggle Word Diff | Toggle Git word diff |
+| `Space gtb` | Toggle Current Line Blame | Toggle Git blame |
+
+#### Nvim-UFO Folding
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `zr` | Open All Folds | Open all folds in file |
+| `zm` | Close All Folds | Close all folds in file |
+| `zR` | Maximize Folds | Open all folds (alternative) |
+| `zM` | Minimize Folds | Close all folds (alternative) |
+| `zA` | Enable UFO Folding | Enable advanced folding |
+| `zD` | Disable UFO Folding | Disable advanced folding |
+
+#### Buffer Operations
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `Space ch` | Close Hidden Buffers | Close all hidden buffers |
+| `Space cu` | Close Nameless Buffers | Close nameless buffers |
+| `Space cb` | Close Current Buffer (preserve layout) | Close current buffer while preserving window layout |
+
+#### AI Assistant (nvim-gemini-companion)
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `Space gg` | Toggle Gemini CLI | Toggle AI assistant panel |
+| `Space gc` | Close Gemini CLI | Close AI assistant process |
+| `Space gD` | Send File Diagnostics | Send file diagnostics to AI |
+| `Space gd` | Send Line Diagnostics | Send line diagnostics to AI |
+| `Space gs` | Switch Sidebar Style | Switch AI sidebar style |
+| `v+Space gS` | Send Selected Text | Send selected text to AI |
+
+#### Opencode.nvim
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `Space oa` | Ask About This | Ask AI about current context |
+| `Space o+` | Add This | Add prompt to opencode |
+| `Space os` | Select Prompt | Select a prompt |
+| `Space ot` | Toggle Opencode | Toggle embedded opencode |
+| `Space oc` | Select Command | Select a command |
+| `Space on` | New Session | Start a new session |
+| `Space oi` | Interrupt Session | Interrupt current session |
+| `Space oA` | Cycle Agent | Cycle through available agents |
+| `Shift+Ctrl+u` | Messages Half Page Up | Scroll messages up |
+| `Shift+Ctrl+d` | Messages Half Page Down | Scroll messages down |
+
+#### Auto Save Plugin
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `Space as` | Toggle Autosave | Toggle autosave on/off |
+| `Space ae` | Enable Autosave | Enable autosave |
+| `Space ad` | Disable Autosave | Disable autosave |
+| `Space at` | Check Autosave Status | Check current autosave status |
+
+#### Typing Practice (Typr)
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `Space tt` | Open Typing Practice | Open typing practice interface |
+| `Space ts` | Open Typing Statistics | Open typing statistics |
+
+#### Theme Switching
+| Command | Function | Description |
+|---------|----------|-------------|
+| `:Theme [theme_name]` | Switch Theme | Switch to the specified theme |
+| `Space td` | Search for Themes | Search for themes with Telescope |
+
+#### Search and Replace
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `Space sr` | Search and Replace | Start search and replace in file |
+| `Space sra` | Search and Replace All | Replace all occurrences in file |
+| `Space src` | Search and Replace All with Confirm | Replace all with confirmation |
+
+#### Window Navigation
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `Ctrl+j` | Move to Window Below | Move to window below |
+| `Ctrl+k` | Move to Window Above | Move to window above |
+| `Ctrl+h` | Move to Window Left | Move to window left |
+| `Ctrl+l` | Move to Window Right | Move to window right |
+
+#### Line Movement (moveline.nvim)
+| Mode | Shortcut | Function | Description |
+|------|----------|----------|-------------|
+| Normal | `Alt+j` | Move Line Down | Move current line down |
+| Normal | `Alt+k` | Move Line Up | Move current line up |
+| Normal | `Alt+Shift+j` | Duplicate Line Down | Duplicate current line down |
+| Normal | `Alt+Shift+k` | Duplicate Line Up | Duplicate current line up |
+| Visual | `Alt+j` | Move Lines Down | Move selected lines down |
+| Visual | `Alt+k` | Move Lines Up | Move selected lines up |
+| Visual | `Alt+Shift+j` | Duplicate Block Down | Duplicate selected block down |
+| Visual | `Alt+Shift+k` | Duplicate Block Up | Duplicate selected block up |
+
+#### Terminal Management
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `Space tt` | Open Terminal | Open terminal in a new buffer |
+| `Space tv` | Vertical Split Terminal | Open terminal in vertical split |
+| `Space th` | Horizontal Split Terminal | Open terminal in horizontal split |
+| `Alt+[` | Terminal to Normal Mode | Exit terminal mode and return to normal mode |
+| `Alt+]` | Terminal Escape and Window Command | Exit terminal and enter window command |
+
+#### Tab Management
+| Shortcut | Function | Description |
+|----------|----------|-------------|
+| `Space t1-5` | Go to Tab 1-5 | Switch to specific tab (1-5) |
+| `Space tf` | Go to First Tab | Switch to first tab |
+| `Space tl` | Go to Last Tab | Switch to last tab |
+| `Space tp` | Go to Previous Tab | Switch to previous tab |
+| `Space to` | Close Other Tabs | Close all tabs except current |
 
 ---
 
@@ -514,6 +701,143 @@ nvim --startuptime startup.log -c ":quit"
 This Neovim configuration is provided as-is for educational and personal use. Feel free to modify and adapt it to your needs.
 
 **Note**: Individual plugins may have their own licenses. Please refer to each plugin's repository for licensing information.
+
+---
+
+### 📚 Plugin Usage Documentation
+
+#### nvim-surround - Text Surrounding Plugin
+This plugin allows you to add, delete, and replace surrounding characters like parentheses, brackets, quotes, and HTML tags.
+
+**Basic Usage:**
+- `ys{motion}{character}` - Add surrounding character around text
+  - Example: `ysiw)` adds parentheses around the word under the cursor
+  - Example: `ysiw"` adds quotes around the word under the cursor
+
+- `cs{old}{new}` - Change surrounding character
+  - Example: `cs"'` changes quotes to apostrophes
+  - Example: `cs)]` changes parentheses to brackets
+
+- `ds{character}` - Delete surrounding character
+  - Example: `ds"` removes quotes around text
+
+- `yss{character}` - Add surrounding to entire line
+  - Example: `yss)` adds parentheses around the entire line
+
+**Custom HTML Tag Usage:**
+- `ys{motion}t` - Add custom HTML tag around text
+  - Example: `ysiwt` will prompt for a tag name and wrap the word in that tag
+  - The tag name will be remembered for future use
+
+**Visual Mode Usage:**
+- Select text in visual mode, then press `S{character}` to surround
+  - Example: Select text with `v`, then press `S)` to wrap in parentheses
+
+#### mini.surround - Alternative Surround Plugin
+This is an alternative to nvim-surround with a different keymap structure using the `<leader>m` prefix:
+
+- `<leader>+msa` - Add surround in normal mode
+- `<leader>+msa` (in visual mode) - Add surround around selected text
+- `<leader>+msd` - Delete surround
+- `<leader>+msr` - Replace surround
+- `<leader>+msf` - Find surround
+
+#### Comment Plugin - Code Commenting
+This plugin allows you to quickly comment and uncomment code.
+
+**Basic Usage:**
+- `<leader>/` (normal mode) - Toggle comment on current line
+- `<leader>/` (visual mode) - Toggle comment on selected text
+- `<leader>bc` - Toggle block comment (for current line)
+- `<leader>c` (visual mode) - Toggle block comment on selection
+
+#### nvim-ufo - Advanced Folding
+This plugin provides enhanced code folding capabilities.
+
+**Basic Usage:**
+- `zR` - Open all folds
+- `zM` - Close all folds
+- `zr` - Increase fold level (open more folds)
+- `zm` - Decrease fold level (close more folds)
+- `za` - Toggle fold under cursor
+- `zc` - Close fold under cursor
+- `zo` - Open fold under cursor
+- `zA` - Enable UFO folding
+- `zD` - Disable UFO folding
+
+#### Telescope - Fuzzy Finder
+This plugin provides powerful fuzzy finding capabilities.
+
+**Basic Usage:**
+- `<leader><leader>` - Find files
+- `<leader>fg` - Live grep (search text in files)
+- `<leader>fb` - Find buffers
+- `<leader>fh` - Find help tags
+- `<leader>ft` or `<leader>st` - Find todo comments
+- `<leader>te` - File browser
+
+#### Gitsigns - Git Integration
+This plugin shows Git information directly in the editor.
+
+**Basic Usage:**
+- `<leader>gg` - Git status
+- `<leader>gc` - Git commit
+- `<leader>gp` - Git push
+- `<leader>gl` - Git log
+- `<leader>gfb` - Git branch
+- `<leader>gfd` - Git diff
+- `<leader>gfr` - Git rename
+- `<leader>gfR` - Git reset HEAD
+- `<leader>gfs` - Git stash
+- `<leader>gfa` - Git add all
+- `<leader>gfu` - Git undo changes to file
+- `<leader>gfw` - Git browse file/URL
+- `<leader>gfi` - Git init
+
+**Hunk Navigation:**
+- `<leader>gj` - Next git hunk
+- `<leader>gk` - Previous git hunk
+- `<leader>gp` - Preview git hunk
+- `<leader>gr` - Reset git hunk
+- `<leader>gs` - Stage git hunk
+- `<leader>gu` - Undo stage git hunk
+
+#### Visual-Multi - Multi-Cursor Editing
+This plugin enables VS Code-style multi-cursor editing.
+
+**Basic Usage:**
+- `Alt+d` - Select next occurrence of current word
+- `Ctrl+Down` - Add cursor below
+- `Ctrl+Up` - Add cursor above
+- `Alt+n` - Skip current selection
+- `Alt+p` - Remove last cursor
+
+#### Moveline - Moving Lines 
+This plugin allows you to move lines up and down easily.
+
+**Basic Usage:**
+- `Alt+j` - Move line down (in normal mode)
+- `Alt+k` - Move line up (in normal mode)
+- `Alt+j` - Move selected lines down (in visual mode)
+- `Alt+k` - Move selected lines up (in visual mode)
+- `Alt+Shift+j` - Duplicate line down
+- `Alt+Shift+k` - Duplicate line up
+
+#### Floaterm - Floating Terminal
+This plugin provides a floating terminal experience.
+
+**Basic Usage:**
+- `Ctrl+p` - Toggle floating terminal
+- `Ctrl+j` - Cycle to previous terminal
+- `Ctrl+k` - Cycle to next terminal
+
+#### NvimTree - File Explorer
+This plugin provides a tree-style file explorer.
+
+**Basic Usage:**
+- `<leader>e` - Toggle file explorer
+- `l` - Open file/directory or navigate to next sibling
+- `h` - Close folder or navigate to previous sibling
 
 ---
 

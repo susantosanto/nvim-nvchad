@@ -23,9 +23,9 @@ M.ui = {
     order = { "treeOffset", "buffers", "tabs", "btns" },
   },
   statusline = {
-    theme = "vscode_colored",
+    theme = "vscode",
     -- Choose separator style: "default", "arrow", "round", "slant", or "block"
-    separator_style = "arrow", -- Using arrow separators for modern look
+    separator_style = "block", -- Using arrow separators for modern look
     -- Define custom order of statusline components
     -- Hide statusline on focus loss
     hide_on_focus_loss = false,
