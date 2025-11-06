@@ -192,6 +192,23 @@ map("n", "gd", function()
   end
 end, { desc = "Go to definition", noremap = true, silent = true })
 
+-- Keymaps untuk diagnostic (error/warning navigation)
+map("n", "]d", function()
+  vim.diagnostic.goto_next({ border = "rounded" })
+end, { desc = "Next diagnostic" })
+
+map("n", "[d", function()
+  vim.diagnostic.goto_prev({ border = "rounded" })
+end, { desc = "Previous diagnostic" })
+
+map("n", "<leader>de", function()
+  vim.diagnostic.open_float({ border = "rounded" })
+end, { desc = "Show diagnostic in floating window" })
+
+map("n", "<leader>dq", function()
+  vim.diagnostic.setloclist({ severity = { min = vim.diagnostic.severity.WARN } })
+end, { desc = "Show diagnostics in location list" })
+
 -- Keymap untuk quit Neovim
 map("n", "<leader>q", ":qa<CR>", { desc = "Quit Neovim", noremap = true, silent = true })
 
@@ -427,6 +444,9 @@ map("n", "<leader>ts", "<cmd>TyprStats<CR>", { desc = "Open Typr statistics" })
 map("n", "<leader>tw", function()
   require("twilight").toggle()
 end, { desc = "Toggle Twilight mode" })
+
+-- Inc-rename.nvim keymap
+map("n", "<leader>rn", ":IncRename ", { desc = "Incremental Rename" })
 
 -- Telescope Media Files keymaps
 map("n", "<leader>fi", function()

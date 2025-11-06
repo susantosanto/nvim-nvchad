@@ -251,3 +251,10 @@ vim.cmd([[
   " Cursorline bersih (hanya sorot baris, bukan indent)
   " highlight CursorLine dan CursorLineNr akan diatur oleh modes.nvim
 ]])
+
+-- Set specific highlight for CursorLineNr to make it more visible when cursorline is active
+vim.api.nvim_set_hl(0, "CursorLineNr", {
+  fg = "#d33682",
+  bg = "NONE", -- No background to keep it subtle against CursorLine
+  bold = true, -- Make it bold for better visibility
+})

@@ -1,5 +1,12 @@
 -- ~/.config/nvim/lua/plugins/init.lua
 return {
+  {
+    "smjonas/inc-rename.nvim",
+    cmd = "IncRename",
+    config = function()
+      require("inc_rename").setup()
+    end,
+  },
   -- Dependency: nui.nvim
   {
     "MunifTanjim/nui.nvim",
@@ -592,7 +599,7 @@ return {
     config = function()
       require("nvim-tree").setup({
         view = {
-          width = 30,
+          width = 25, -- Reduced from 30 to 25 to create space between NvimTree and signcolumn
           side = "left",
           -- side = "right",
           relativenumber = false,
@@ -1091,6 +1098,7 @@ return {
       },
     },
   },
+
   -- Modern notification system
   {
     "rcarriga/nvim-notify",

@@ -7,8 +7,8 @@ local o = vim.o
 o.relativenumber = true
 o.number = true
 vim.go.numberwidth = 4
-o.signcolumn = "yes" -- Always show sign column for todo-comments icons
-o.cursorline = false -- Highlight current cursor line
+o.signcolumn = "yes:3" -- Always show sign column with 3 character width for more space
+o.cursorline = true -- Highlight current cursor line
 o.cursorlineopt = "both"
 o.sidescrolloff = 8
 o.wrap = true
@@ -16,6 +16,7 @@ o.showtabline = 0
 o.splitbelow = true
 o.splitright = true
 o.splitkeep = "screen"
+o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:,vert:│]]
 
 -- === SEARCH & COMPLETION ===
 o.ignorecase = true
@@ -27,7 +28,7 @@ o.hlsearch = true
 o.foldlevel = 99
 o.foldlevelstart = 99
 o.foldenable = true
-o.foldcolumn = "0"
+o.foldcolumn = "1"  -- Set to 1 to create space on the left side
 
 -- local o = vim.o
 -- o.cursorlineopt ='both' -- to enable cursorline!
