@@ -876,6 +876,18 @@ Built-in Neovim diagnostic functions are enhanced with custom keymaps for easy n
 - View detailed diagnostic information
 - Rounded borders for floating diagnostic windows
 
+#### Undotree - Visual Undo History
+This plugin provides a visual representation of your undo history, allowing you to navigate through previous states of your file.
+
+**Key Bindings:**
+- `<leader>U` - Toggle Undotree panel
+
+**Features:**
+- Visual representation of file's undo tree
+- Easy navigation through previous file states
+- Ability to restore to any previous state
+- Commands: `:UndotreeToggle`, `:UndotreeShow`, `:UndotreeHide`, `:UndotreeFocus`
+
 ---
 
 *Crafted with passion for developers who demand excellence in their coding environment.*

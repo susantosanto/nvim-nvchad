@@ -743,3 +743,6 @@ map("n", "<leader>bk", function()
     vim.api.nvim_win_close(winnr, true)
   end
 end, { desc = "Close split and buffer" })
+
+-- Keymap untuk Undotree
+map("n", "<leader>U", "<cmd>UndotreeToggle<CR>", { desc = "Toggle Undotree" })
