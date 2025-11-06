@@ -120,6 +120,8 @@ Whether you're building React applications, developing Node.js services, working
 - **buffer-sticks.nvim** - Quick buffer switching
 - **typr.nvim** - Typing practice plugin
 - **close-buffers.nvim** - Close multiple buffers
+- **inc-rename.nvim** - Incremental rename with real-time preview
+- **tiny-inline-diagnostic.nvim** - Inline diagnostic display for errors/warnings
 
 ---
 
@@ -838,6 +840,41 @@ This plugin provides a tree-style file explorer.
 - `<leader>e` - Toggle file explorer
 - `l` - Open file/directory or navigate to next sibling
 - `h` - Close folder or navigate to previous sibling
+
+#### inc-rename.nvim - Incremental Rename
+This plugin provides real-time incremental renaming of symbols with live preview.
+
+**Basic Usage:**
+- `<leader>rn` - Start incremental rename for symbol under cursor
+- Type the new name and see changes applied in real-time across all occurrences
+- Press Enter to confirm the rename or Esc to cancel
+
+**Features:**
+- Real-time preview of changes as you type
+- Works with any LSP-supported language
+- Shows all occurrences affected by the rename operation
+
+#### tiny-inline-diagnostic.nvim - Inline Diagnostics
+This plugin displays diagnostic information (errors, warnings, hints) inline on the right side of the code.
+
+**Basic Usage:**
+- Diagnostics appear automatically as you type
+- Error/warning messages are displayed inline with your code
+- Different colors and icons for error levels (red for errors, yellow for warnings, etc.)
+
+#### Diagnostic Navigation
+Built-in Neovim diagnostic functions are enhanced with custom keymaps for easy navigation.
+
+**Key Bindings:**
+- `]d` - Jump to next diagnostic
+- `[d` - Jump to previous diagnostic
+- `<leader>de` - Show diagnostic details in floating window
+- `<leader>dq` - Open diagnostics in location list
+
+**Features:**
+- Navigate between errors and warnings quickly
+- View detailed diagnostic information
+- Rounded borders for floating diagnostic windows
 
 ---
 
