@@ -176,14 +176,50 @@ return {
   -- opencode.nvim
   {
     "NickvanDyke/opencode.nvim",
+    cmd = {
+      "OpencodePrompt",
+    },
     dependencies = {
       "MunifTanjim/nui.nvim",
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
       "nvim-treesitter/nvim-treesitter",
       "stevearc/dressing.nvim",
+      "folke/snacks.nvim", -- Required for terminal provider
     },
-    opts = {},
+    config = function()
+      -- Ensure the opencode binary path is in the environment
+      local opencode_path = vim.fn.expand("~/.opencode/bin")
+      local current_path = vim.env.PATH
+      if not string.find(current_path, opencode_path) then
+        vim.env.PATH = opencode_path .. ":" .. current_path
+      end
+
+      -- Set up configuration via global variable as recommended in the docs
+      vim.g.opencode_opts = {
+        -- Configure the provider to use snacks.nvim terminal
+        provider = {
+          cmd = opencode_path .. "/opencode",  -- Explicitly set the full path to the executable
+          enabled = "snacks", -- Use snacks.nvim terminal provider
+          snacks = {
+            auto_close = false, -- Keep terminal open after opencode exits
+            win = {
+              position = "right",
+              size = 0.3, -- 30% of window width
+              enter = false,
+              wo = {
+                winbar = "",
+              },
+              bo = {
+                filetype = "opencode_terminal",
+              },
+            },
+          },
+        },
+        -- Enable auto-reload of buffers modified by opencode
+        auto_reload = true,
+      }
+    end,
   },
   -- Buffer-sticks
   {
@@ -732,7 +768,7 @@ return {
           untracked = { text = "┆" },
         },
         signs_staged_enable = true,
-        signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
+        signcolumn = false, -- Toggle with `:Gitsigns toggle_signs`
         numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
         linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
         word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`

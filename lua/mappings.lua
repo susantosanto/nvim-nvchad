@@ -362,34 +362,84 @@ map("v", "<leader>gS", "<cmd>GeminiSend<CR>", { desc = "Send Selected Text to AI
 
 -- opencode.nvim keymaps
 map("n", "<leader>oa", function()
-  require("opencode").ask("@this: ", { submit = true })
+  local opencode_ok, opencode = pcall(require, "opencode")
+  if opencode_ok then
+    opencode.ask("@this: ", { submit = true })
+  else
+    vim.notify("opencode.nvim not available: " .. tostring(opencode), vim.log.levels.ERROR)
+  end
 end, { desc = "Ask about this" })
 map({ "n", "v" }, "<leader>o+", function()
-  require("opencode").prompt("@this")
+  local opencode_ok, opencode = pcall(require, "opencode")
+  if opencode_ok then
+    opencode.prompt("@this")
+  else
+    vim.notify("opencode.nvim not available: " .. tostring(opencode), vim.log.levels.ERROR)
+  end
 end, { desc = "Add this" })
 map("n", "<leader>os", function()
-  require("opencode").select()
+  local opencode_ok, opencode = pcall(require, "opencode")
+  if opencode_ok then
+    opencode.select()
+  else
+    vim.notify("opencode.nvim not available: " .. tostring(opencode), vim.log.levels.ERROR)
+  end
 end, { desc = "Select prompt" })
 map("n", "<leader>ot", function()
-  require("opencode").toggle()
+  local opencode_ok, opencode = pcall(require, "opencode")
+  if opencode_ok then
+    opencode.toggle()
+  else
+    vim.notify("opencode.nvim not available: " .. tostring(opencode), vim.log.levels.ERROR)
+  end
 end, { desc = "Toggle embedded opencode" })
 map("n", "<leader>oc", function()
-  require("opencode").command()
+  local opencode_ok, opencode = pcall(require, "opencode")
+  if opencode_ok then
+    opencode.command()
+  else
+    vim.notify("opencode.nvim not available: " .. tostring(opencode), vim.log.levels.ERROR)
+  end
 end, { desc = "Select command" })
 map("n", "<leader>on", function()
-  require("opencode").command("session_new")
+  local opencode_ok, opencode = pcall(require, "opencode")
+  if opencode_ok then
+    opencode.command("session_new")
+  else
+    vim.notify("opencode.nvim not available: " .. tostring(opencode), vim.log.levels.ERROR)
+  end
 end, { desc = "New session" })
 map("n", "<leader>oi", function()
-  require("opencode").command("session_interrupt")
+  local opencode_ok, opencode = pcall(require, "opencode")
+  if opencode_ok then
+    opencode.command("session_interrupt")
+  else
+    vim.notify("opencode.nvim not available: " .. tostring(opencode), vim.log.levels.ERROR)
+  end
 end, { desc = "Interrupt session" })
 map("n", "<leader>oA", function()
-  require("opencode").command("agent_cycle")
+  local opencode_ok, opencode = pcall(require, "opencode")
+  if opencode_ok then
+    opencode.command("agent_cycle")
+  else
+    vim.notify("opencode.nvim not available: " .. tostring(opencode), vim.log.levels.ERROR)
+  end
 end, { desc = "Cycle selected agent" })
 map("n", "<S-C-u>", function()
-  require("opencode").command("messages_half_page_up")
+  local opencode_ok, opencode = pcall(require, "opencode")
+  if opencode_ok then
+    opencode.command("messages_half_page_up")
+  else
+    vim.notify("opencode.nvim not available: " .. tostring(opencode), vim.log.levels.ERROR)
+  end
 end, { desc = "Messages half page up" })
 map("n", "<S-C-d>", function()
-  require("opencode").command("messages_half_page_down")
+  local opencode_ok, opencode = pcall(require, "opencode")
+  if opencode_ok then
+    opencode.command("messages_half_page_down")
+  else
+    vim.notify("opencode.nvim not available: " .. tostring(opencode), vim.log.levels.ERROR)
+  end
 end, { desc = "Messages half page down" })
 
 -- Bracket navigation (built-in % functionality plus alternatives)
