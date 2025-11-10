@@ -486,9 +486,7 @@ map("n", "<leader>bt", function()
   require("buffer-sticks").toggle()
 end, { desc = "Toggle buffer sticks" })
 
--- Typr plugin keymaps
-map("n", "<leader>tt", "<cmd>Typr<CR>", { desc = "Open Typr typing practice" })
-map("n", "<leader>ts", "<cmd>TyprStats<CR>", { desc = "Open Typr statistics" })
+
 
 -- Twilight plugin keymaps
 map("n", "<leader>tw", function()
