@@ -28,7 +28,7 @@ o.hlsearch = true
 o.foldlevel = 99
 o.foldlevelstart = 99
 o.foldenable = true
-o.foldcolumn = "1"  -- Set to 1 to create space on the left side
+o.foldcolumn = "1" -- Set to 1 to create space on the left side
 
 -- local o = vim.o
 -- o.cursorlineopt ='both' -- to enable cursorline!

@@ -118,7 +118,6 @@ Whether you're building React applications, developing Node.js services, working
 - **Treesitter Context** - Show context for code blocks
 - **markview.nvim** - Markdown preview plugin
 - **buffer-sticks.nvim** - Quick buffer switching
-- **typr.nvim** - Typing practice plugin
 - **close-buffers.nvim** - Close multiple buffers
 - **inc-rename.nvim** - Incremental rename with real-time preview
 - **tiny-inline-diagnostic.nvim** - Inline diagnostic display for errors/warnings
@@ -300,11 +299,7 @@ Whether you're building React applications, developing Node.js services, working
 | `Space ad` | Disable Autosave | Disable autosave |
 | `Space at` | Check Autosave Status | Check current autosave status |
 
-#### Typing Practice (Typr)
-| Shortcut | Function | Description |
-|----------|----------|-------------|
-| `Space tt` | Open Typing Practice | Open typing practice interface |
-| `Space ts` | Open Typing Statistics | Open typing statistics |
+
 
 #### Theme Switching
 | Command | Function | Description |
@@ -887,6 +882,82 @@ This plugin provides a visual representation of your undo history, allowing you 
 - Easy navigation through previous file states
 - Ability to restore to any previous state
 - Commands: `:UndotreeToggle`, `:UndotreeShow`, `:UndotreeHide`, `:UndotreeFocus`
+
+#### DAP (Debug Adapter Protocol) - Advanced Debugging
+DAP provides powerful debugging capabilities for multiple programming languages.
+
+**Basic Usage:**
+- Set breakpoints with `F9` (when configured)
+- Start debugging with `F5`
+- Step over/in/out with `F10/F11/F8`
+- Variable inspection and call stack visualization
+
+**Key Bindings:**
+- `<leader>dt` - Toggle debugging console
+- `<leader>db` - Toggle breakpoint
+- `<leader>dc` - Continue execution
+- `<leader>dn` - Step over
+- `<leader>di` - Step into
+
+**Features:**
+- Language-agnostic debugging interface
+- Integrated debugging UI
+- Expression evaluation
+- Variable inspection
+- Call stack navigation
+
+#### Snacks.nvim - Productivity Enhancements
+This plugin provides a collection of essential productivity enhancements for Neovim.
+
+**Features:**
+- Bigfile handling for large files
+- Hints for common actions
+- Quick file operations
+- Status column enhancements
+- Progress indicators
+- Scope visualization
+- Statusline improvements
+
+#### Store.nvim - Code Snippet Storage
+A plugin for storing and retrieving code snippets and notes with integration to markview.nvim.
+
+**Features:**
+- Persistent snippet storage
+- Integration with markdown preview
+- Organized snippet management
+- Quick retrieval commands
+
+#### Dotenv.nvim - Environment Variables
+Automatically loads environment variables from .env files based on your project structure.
+
+**Features:**
+- Automatic .env loading
+- Project-aware environment detection
+- Multiple .env file support
+- Environment variable validation
+
+#### Beacon.nvim - Cursor Movement Highlighting
+Highlights cursor movements to improve visibility during navigation.
+
+**Features:**
+- Visual feedback for cursor movement
+- Configurable highlight duration
+- Performance-optimized animations
+- Works with all movement commands
+
+#### Mini.pairs and Mini.animate - Enhanced Editing
+Additional mini.nvim utilities for automated pair completion and smooth animations.
+
+**Mini.pairs Features:**
+- Automatic bracket/quote completion
+- Backspace deletes both brackets
+- Fast and lightweight
+
+**Mini.animate Features:**
+- Smooth scrolling animations
+- Command execution animations
+- Customizable animation speeds
+- Performance-optimized
 
 ---
 

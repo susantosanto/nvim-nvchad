@@ -199,7 +199,7 @@ return {
       vim.g.opencode_opts = {
         -- Configure the provider to use snacks.nvim terminal
         provider = {
-          cmd = opencode_path .. "/opencode",  -- Explicitly set the full path to the executable
+          cmd = opencode_path .. "/opencode", -- Explicitly set the full path to the executable
           enabled = "snacks", -- Use snacks.nvim terminal provider
           snacks = {
             auto_close = false, -- Keep terminal open after opencode exits

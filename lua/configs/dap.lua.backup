@@ -1,0 +1,442 @@
+local dap = require("dap")
+
+-- Set up signs for breakpoints first
+vim.fn.sign_define('DapBreakpoint', { text = '●', texthl = 'DiagnosticError', linehl = '', numhl = '' })
+vim.fn.sign_define('DapBreakpointCondition', { text = '●', texthl = 'DiagnosticWarn', linehl = '', numhl = '' })
+vim.fn.sign_define('DapLogPoint', { text = '◆', texthl = 'DiagnosticInfo', linehl = '', numhl = '' })
+
+-- Setup DAP UI with enhanced configuration following TJ DeVries approach
+local dapui_ok, dapui = pcall(require, "dapui")
+if dapui_ok then
+  dapui.setup({
+    layouts = {
+      {
+        elements = {
+          { id = "scopes",      size = 0.30 },
+          { id = "breakpoints", size = 0.15 },
+          { id = "stacks",      size = 0.25 },
+          { id = "watches",     size = 0.30 },
+        },
+        size = 40,
+        position = "left",
+      },
+      {
+        elements = {
+          "repl",
+          "console",
+        },
+        size = 10,
+        position = "bottom",
+      },
+    },
+    controls = {
+      -- Requires -1 width to work properly
+      enabled = true,
+      -- Display controls in this element
+      element = "repl",
+      icons = {
+        pause = "⏸",
+        play = "▶",
+        step_into = "⏎",
+        step_over = "⏭",
+        step_out = "⏮",
+        step_back = "b",
+        run_last = "▶▶",
+        terminate = "⏹",
+        disconnect = "⏏",
+      },
+    },
+    floating = {
+      max_height = 0.9,
+      max_width = 0.5,
+      border = "rounded",
+      mappings = {
+        close = { "q", "<Esc>" },
+      },
+    },
+    windows = { indent = 1 },
+    render = {
+      max_type_length = nil,
+    }
+  })
+
+  -- Enhanced event handling following TJ DeVries pattern
+  dap.listeners.after.event_initialized["dapui_config"] = function()
+    dapui.open()
+  end
+  dap.listeners.before.event_terminated["dapui_config"] = function()
+    dapui.close()
+  end
+  dap.listeners.before.event_exited["dapui_config"] = function()
+    dapui.close()
+  end
+  dap.listeners.after.disconnect["dapui_config"] = function()
+    dapui.close()
+  end
+  dap.listeners.after.terminate["dapui_config"] = function()
+    dapui.close()
+  end
+else
+  vim.api.nvim_notify("DAP UI not available: " .. tostring(dapui_ok), vim.log.levels.WARN, {})
+end
+
+-- Setup Mason DAP integration first - this will register the adapters
+local mason_dap_ok, mason_dap = pcall(require, "mason-nvim-dap")
+if mason_dap_ok then
+  -- Setup Mason DAP integration - using server type adapter to avoid port placeholder issues
+  mason_dap.setup({
+    ensure_installed = { "js-debug-adapter" },
+    -- Use handler based on kickstart.nvim approach
+    handlers = {
+      ["js"] = function(config)
+        local dap = require("dap")
+        local js_debug_path = vim.fn.stdpath("data") .. '/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js'
+
+        -- Function-based adapter to properly handle port replacement
+        -- The {{port}} placeholder approach doesn't work reliably in all cases
+        dap.adapters["pwa-node"] = function(callback, config)
+          local handle = io.popen("python3 -c 'import socket; s=socket.socket(); s.bind((\"127.0.0.1\", 0)); print(s.getsockname()[1]); s.close()' 2>/dev/null")
+          if not handle then
+            print("ERROR: Could not run command to get free port")
+            callback(nil)
+            return
+          end
+          
+          local port_output = handle:read("*a")
+          handle:close()
+          
+          if not port_output then
+            print("ERROR: Could not read output when getting free port")
+            callback(nil)
+            return
+          end
+          
+          -- Clean the output string of all non-digit characters except newlines
+          local clean_output = port_output:gsub("[^\n\r%d]", "")
+          
+          -- Extract numeric digits only and trim whitespace
+          local numeric_part = clean_output:match("(%d+)")
+          
+          if not numeric_part then
+            print("ERROR: Could not find numeric part in port output: '" .. port_output .. "'")
+            callback(nil)
+            return
+          end
+          
+          local port = tonumber(numeric_part)
+          
+          if not port then
+            print("ERROR: Could not convert to number: '" .. numeric_part .. "'")
+            callback(nil)
+            return
+          end
+          
+          print("Starting js-debug server on port: " .. port)
+          local full_cmd = string.format("node '%s' %d 2>/dev/null &", js_debug_path, port)
+          os.execute(full_cmd)
+          
+          -- Wait a bit for server to start before connecting
+          vim.defer_fn(function()
+            callback({
+              type = "server";
+              host = "127.0.0.1";
+              port = port;
+            })
+          end, 500)
+        end
+
+        -- Set up JavaScript configurations
+        dap.configurations.javascript = {
+          {
+            type = "pwa-node";
+            request = "launch";
+            name = "Launch file";
+            program = "${file}";
+            cwd = "${fileDirname}";
+            console = "integratedTerminal";
+          },
+        }
+
+        print("js-debug adapter configured following kickstart.nvim approach")
+      end,
+      -- Default handler for all other adapters
+      function(config)
+        require('mason-nvim-dap.automatic_setup')(config)
+      end
+    }
+  })
+else
+  print("mason-nvim-dap not available, make sure it's installed")
+  -- Simple fallback when mason-nvim-dap is not available
+  local js_debug_path = vim.fn.stdpath("data") .. '/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js'
+  local f = io.open(js_debug_path, "r")
+  if f then
+    f:close()
+    -- Function-based adapter for fallback to properly handle port replacement
+    dap.adapters["pwa-node"] = function(callback, config)
+      local handle = io.popen("python3 -c 'import socket; s=socket.socket(); s.bind((\"127.0.0.1\", 0)); print(s.getsockname()[1]); s.close()' 2>/dev/null")
+      if not handle then
+        print("ERROR (fallback): Could not run command to get free port")
+        callback(nil)
+        return
+      end
+      
+      local port_output = handle:read("*a")
+      handle:close()
+      
+      if not port_output then
+        print("ERROR (fallback): Could not read output when getting free port")
+        callback(nil)
+        return
+      end
+      
+      -- Clean the output string of all non-digit characters except newlines
+      local clean_output = port_output:gsub("[^\n\r%d]", "")
+      
+      -- Extract numeric digits only and trim whitespace
+      local numeric_part = clean_output:match("(%d+)")
+      
+      if not numeric_part then
+        print("ERROR (fallback): Could not find numeric part in port output: '" .. port_output .. "'")
+        callback(nil)
+        return
+      end
+      
+      local port = tonumber(numeric_part)
+      
+      if not port then
+        print("ERROR (fallback): Could not convert to number: '" .. numeric_part .. "'")
+        callback(nil)
+        return
+      end
+      
+      print("Starting js-debug server on port (fallback): " .. port)
+      local full_cmd = string.format("node '%s' %d 2>/dev/null &", js_debug_path, port)
+      os.execute(full_cmd)
+      
+      -- Wait a bit for server to start before connecting
+      vim.defer_fn(function()
+        callback({
+          type = "server";
+          host = "127.0.0.1";
+          port = port;
+        })
+      end, 500)
+    end
+
+    -- Set up JavaScript configurations
+    dap.configurations.javascript = {
+      {
+        type = "pwa-node";
+        request = "launch";
+        name = "Launch file";
+        program = "${file}";
+        cwd = "${fileDirname}";
+        console = "integratedTerminal";
+      },
+    }
+    print("Fallback adapter and configuration set up following kickstart.nvim approach")
+  else
+    print("ERROR: js-debug adapter not found at:", js_debug_path)
+    print("Please install js-debug-adapter via Mason: :MasonInstall js-debug-adapter")
+  end
+end
+
+-- Set up keymaps for DAP functionality
+local set = vim.keymap.set
+
+-- DAP keymaps
+set("n", "<F5>", function()
+  -- Check if configuration is available, if not, attempt to configure it
+  if not dap.configurations.javascript or vim.tbl_isempty(dap.configurations.javascript) then
+    -- Look for available adapters and configure
+    local node_adapter = nil
+    if dap.adapters["pwa-node"] then
+      node_adapter = "pwa-node"
+      print("Using pwa-node adapter")
+    elseif dap.adapters["node"] then
+      node_adapter = "node"
+      print("Using node adapter")
+    end
+    
+    if node_adapter then
+      dap.configurations.javascript = {
+        {
+          type = node_adapter;
+          request = "launch";
+          name = "Launch file";
+          program = "${file}";
+          cwd = vim.fn.getcwd();
+          sourceMaps = true;
+          protocol = "inspector";
+          console = "integratedTerminal";
+          skipFiles = {"<node_internals>/**"};
+        },
+      }
+      print("DAP configured with adapter: " .. node_adapter .. " for javascript")
+    else
+      print("No suitable adapter found for javascript debugging")
+      return
+    end
+  end
+  dap.continue()
+end, { desc = "Debug: Start/Continue" })
+
+set("n", "<F6>", dap.restart, { desc = "Debug: Restart" })
+set("n", "<F9>", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
+set("n", "<F10>", dap.step_over, { desc = "Debug: Step Over" })
+set("n", "<F11>", dap.step_into, { desc = "Debug: Step Into" })
+set("n", "<F12>", dap.step_out, { desc = "Debug: Step Out" })
+
+-- Additional DAP keymaps with leader prefix
+set("n", "<leader>dc", function()
+  -- Check if configuration is available, if not, attempt to configure it
+  if not dap.configurations.javascript or vim.tbl_isempty(dap.configurations.javascript) then
+    -- Look for available adapters and configure
+    local node_adapter = nil
+    if dap.adapters["pwa-node"] then
+      node_adapter = "pwa-node"
+      print("Using pwa-node adapter")
+    elseif dap.adapters["node"] then
+      node_adapter = "node"
+      print("Using node adapter")
+    end
+    
+    if node_adapter then
+      dap.configurations.javascript = {
+        {
+          type = node_adapter;
+          request = "launch";
+          name = "Launch file";
+          program = "${file}";
+          cwd = vim.fn.getcwd();
+          sourceMaps = true;
+          protocol = "inspector";
+          console = "integratedTerminal";
+          skipFiles = {"<node_internals>/**"};
+        },
+      }
+      print("DAP configured with adapter: " .. node_adapter .. " for javascript")
+    else
+      print("No suitable adapter found for javascript debugging")
+      return
+    end
+  end
+  dap.continue()
+end, { desc = "Debug: Continue" })
+
+set("n", "<leader>dr", dap.restart, { desc = "Debug: Restart" })
+set("n", "<leader>di", dap.step_into, { desc = "Debug: Step Into" })
+set("n", "<leader>do", dap.step_over, { desc = "Debug: Step Over" })
+set("n", "<leader>du", dap.step_out, { desc = "Debug: Step Out" })
+set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
+set("n", "<leader>dB", function() dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ') end, { desc = "Debug: Set Breakpoint Condition" })
+set("n", "<leader>dd", dap.run_to_cursor, { desc = "Debug: Run to cursor" })
+set("n", "<leader>ds", dap.session, { desc = "Debug: Session" })
+set("n", "<leader>dt", dap.terminate, { desc = "Debug: Terminate" })
+set("n", "<leader>de", dap.run_last, { desc = "Debug: Execute last" })
+set("n", "<leader>du", function()
+  if dapui_ok then
+    dapui.toggle()
+  else
+    print("DAP UI not available")
+  end
+end, { desc = "Debug: Toggle UI" })
+
+-- Additional configuration for VSCode launch.json support
+require("dap.ext.vscode").json_decode = vim.fn.json_decode
+
+-- Create autocommand to ensure JavaScript configurations exist when JS file is opened
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+  callback = function()
+    vim.schedule(function()
+      -- Check and set up configurations if not already set
+      if not dap.configurations.javascript or vim.tbl_isempty(dap.configurations.javascript) then
+        local node_adapter = nil
+        if dap.adapters["pwa-node"] then
+          node_adapter = "pwa-node"
+          print("Auto-configured: Using pwa-node adapter for JavaScript")
+        elseif dap.adapters["node"] then
+          node_adapter = "node"
+          print("Auto-configured: Using node adapter for JavaScript")
+        end
+        
+        if node_adapter then
+          dap.configurations.javascript = {
+            {
+              type = node_adapter;
+              request = "launch";
+              name = "Launch file";
+              program = "${file}";
+              cwd = vim.fn.getcwd();
+              sourceMaps = true;
+              protocol = "inspector";
+              console = "integratedTerminal";
+              skipFiles = {"<node_internals>/**"};
+            },
+          }
+          print("JavaScript configurations auto-created with adapter: " .. node_adapter)
+        end
+      end
+      
+      -- Also ensure other JS-based configs exist
+      if not dap.configurations.javascriptreact or vim.tbl_isempty(dap.configurations.javascriptreact) then
+        local node_adapter = dap.adapters["pwa-node"] and "pwa-node" or (dap.adapters["node"] and "node" or nil)
+        if node_adapter then
+          dap.configurations.javascriptreact = {
+            {
+              type = node_adapter;
+              request = "launch";
+              name = "Launch file";
+              program = "${file}";
+              cwd = vim.fn.getcwd();
+              sourceMaps = true;
+              protocol = "inspector";
+              console = "integratedTerminal";
+              skipFiles = {"<node_internals>/**"};
+            },
+          }
+        end
+      end
+      
+      if not dap.configurations.typescript or vim.tbl_isempty(dap.configurations.typescript) then
+        local node_adapter = dap.adapters["pwa-node"] and "pwa-node" or (dap.adapters["node"] and "node" or nil)
+        if node_adapter then
+          dap.configurations.typescript = {
+            {
+              type = node_adapter;
+              request = "launch";
+              name = "Launch file";
+              program = "${file}";
+              cwd = vim.fn.getcwd();
+              sourceMaps = true;
+              protocol = "inspector";
+              console = "integratedTerminal";
+              skipFiles = {"<node_internals>/**"};
+            },
+          }
+        end
+      end
+      
+      if not dap.configurations.typescriptreact or vim.tbl_isempty(dap.configurations.typescriptreact) then
+        local node_adapter = dap.adapters["pwa-node"] and "pwa-node" or (dap.adapters["node"] and "node" or nil)
+        if node_adapter then
+          dap.configurations.typescriptreact = {
+            {
+              type = node_adapter;
+              request = "launch";
+              name = "Launch file";
+              program = "${file}";
+              cwd = vim.fn.getcwd();
+              sourceMaps = true;
+              protocol = "inspector";
+              console = "integratedTerminal";
+              skipFiles = {"<node_internals>/**"};
+            },
+          }
+        end
+      end
+    end)
+  end,
+})

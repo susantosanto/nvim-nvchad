@@ -1019,13 +1019,7 @@ return {
       require("configs.tailwind-autosort").setup()
     end,
   },
-  -- Typing practice plugin
-  {
-    "nvzone/typr",
-    dependencies = "nvzone/volt",
-    opts = {},
-    cmd = { "Typr", "TyprStats" },
-  },
+
   -- Auto save plugin
   {
     "brianhuster/autosave.nvim",

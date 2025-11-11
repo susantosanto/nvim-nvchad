@@ -84,6 +84,17 @@ telescope.setup {
       -- Configure find_files to respect .gitignore and exclude heavy directories
       find_command = { "rg", "--files", "--hidden", "--glob=!.git/*", "--glob=!node_modules/*" },
     },
+    oldfiles = {
+      -- Sort recent files alphabetically
+      cwd_only = false,
+      prompt_title = "Recent Files (Alphabetical)",
+      sorting_strategy = "ascending",
+      layout_config = {
+        horizontal = {
+          preview_width = 0.55,
+        },
+      },
+    },
     live_grep = {
       -- Additional vimgrep_arguments to exclude common heavy directories
       additional_args = function(opts)
