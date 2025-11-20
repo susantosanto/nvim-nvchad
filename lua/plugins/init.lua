@@ -1,5 +1,38 @@
 -- ~/.config/nvim/lua/plugins/init.lua
 return {
+
+  -- Interactive code runner for prototyping
+  {
+    "0x100101/lab.nvim",
+    build = "cd js && npm ci",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    lazy = false,  -- Load immediately instead of lazily
+    priority = 100,  -- High priority to load early
+    config = function()
+      local success, lab = pcall(require, "lab")
+      if success then
+        lab.setup({
+          code_runner = {
+            enabled = true,
+          },
+          quick_data = {
+            enabled = true,
+          },
+        })
+        vim.notify("Lab.nvim setup completed", vim.log.levels.INFO)
+      else
+        vim.notify("Failed to load lab.nvim", vim.log.levels.ERROR)
+      end
+    end,
+    -- Define keymaps for lab.nvim that don't conflict with existing ones
+    keys = {
+      { "<leader>lr", "<cmd>Lab code run<cr>", desc = "Run code in Lab.nvim" },
+      { "<leader>ls", "<cmd>Lab code stop<cr>", desc = "Stop Lab.nvim code runner" },
+      { "<leader>lp", "<cmd>Lab code panel<cr>", desc = "Show Lab.nvim panel" },
+      { "<leader>lc", "<cmd>Lab code config<cr>", desc = "Show Lab.nvim config" },
+    },
+  },
+
   {
     "smjonas/inc-rename.nvim",
     cmd = "IncRename",

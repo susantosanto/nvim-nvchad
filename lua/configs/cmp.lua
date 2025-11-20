@@ -61,6 +61,7 @@ cmp.setup({
     { name = 'luasnip' }, -- Snippets
     { name = 'buffer' }, -- Dari buffer saat ini
     { name = 'path' }, -- Path completion
+    { name = 'lab.quick_data', keyword_length = 4 }, -- Quick data from lab.nvim (if enabled)
   },
   confirm_opts = {
     behavior = cmp.ConfirmBehavior.Replace,

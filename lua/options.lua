@@ -45,3 +45,6 @@ o.timeoutlen = 400
 o.termguicolors = true
 o.pumblend = 10
 o.pumblend = 10
+
+-- Enable confirm dialog for unsaved changes
+o.confirm = true
